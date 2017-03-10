@@ -1,8 +1,9 @@
 ﻿using System.Globalization;
+using AvgJavascriptVm.Core.Errors;
 
-namespace AvgJavascriptVm.Core.Values
+namespace AvgJavascriptVm.Core.BaseTypes
 {
-    public class JsString: JsValue
+    public sealed class JsString: JsValue
     {
         public static JsString Empty = new JsString("");
 
@@ -36,9 +37,9 @@ namespace AvgJavascriptVm.Core.Values
             return Value.Length != 0;
         }
 
-        public override JsString TypeOf()
+        public override JsObject AsObject()
         {
-            return "string";
+            throw new JsNotImplementedException();
         }
 
         public static implicit operator JsString(string value)
@@ -49,6 +50,6 @@ namespace AvgJavascriptVm.Core.Values
         public static implicit operator string(JsString jsStr)
         {
             return jsStr.Value;
-        }
+        }        
     }
 }

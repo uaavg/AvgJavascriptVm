@@ -1,14 +1,15 @@
 ﻿using System.Globalization;
+using AvgJavascriptVm.Core.Errors;
 
-namespace AvgJavascriptVm.Core.Values
+namespace AvgJavascriptVm.Core.BaseTypes
 {
-    public class JsNumber: JsValue
+    public sealed class JsNumber: JsValue
     {
-        public static JsNumber NaN = new JsNumber(double.NaN);
+        public static JsNumber NaN { get; } = new JsNumber(double.NaN);
 
-        public static JsNumber PostiveInfinity = new JsNumber(double.PositiveInfinity);
+        public static JsNumber PostiveInfinity { get; } = new JsNumber(double.PositiveInfinity);
 
-        public static JsNumber NegativeInfinity = new JsNumber(double.NegativeInfinity);
+        public static JsNumber NegativeInfinity { get;  } = new JsNumber(double.NegativeInfinity);
 
         public double Value { get; }
 
@@ -32,9 +33,9 @@ namespace AvgJavascriptVm.Core.Values
             return ((int) Value) != 0;
         }
 
-        public override JsString TypeOf()
+        public override JsObject AsObject()
         {
-            return "number";
+            throw new JsNotImplementedException();
         }
 
         public static implicit operator JsNumber(double value)
@@ -45,6 +46,6 @@ namespace AvgJavascriptVm.Core.Values
         public static implicit operator double(JsNumber jsNum)
         {
             return jsNum.Value;
-        }
+        }        
     }
 }

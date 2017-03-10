@@ -1,6 +1,8 @@
-﻿namespace AvgJavascriptVm.Core.Values
+﻿using AvgJavascriptVm.Core.Errors;
+
+namespace AvgJavascriptVm.Core.BaseTypes
 {
-    public class JsNull: JsValue
+    public sealed class JsNull: JsValue
     {
         public static JsNull Instance = new JsNull();
 
@@ -24,9 +26,9 @@
             return false;
         }
 
-        public override JsString TypeOf()
+        public override JsObject AsObject()
         {
-            return "object";
-        }        
+            throw new JsTypeErrorException("null");
+        }
     }
 }

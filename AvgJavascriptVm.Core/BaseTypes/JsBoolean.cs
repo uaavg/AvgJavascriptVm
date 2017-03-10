@@ -1,6 +1,8 @@
-﻿namespace AvgJavascriptVm.Core.Values
+﻿using AvgJavascriptVm.Core.Errors;
+
+namespace AvgJavascriptVm.Core.BaseTypes
 {
-    public class JsBoolean: JsValue
+    public sealed class JsBoolean: JsValue
     {
         public static JsBoolean True = new JsBoolean(true);
 
@@ -23,14 +25,14 @@
             return Value ? 1 : 0;
         }
 
-        public override JsString TypeOf()
-        {
-            return "boolean";
-        }
-
         public override JsBoolean AsBoolean()
         {
             return Value;
+        }
+
+        public override JsObject AsObject()
+        {
+            throw new JsNotImplementedException();
         }
 
         public static implicit operator JsBoolean(bool value)
@@ -41,6 +43,6 @@
         public static implicit operator bool(JsBoolean jsBool)
         {
             return jsBool.Value;
-        }
+        }        
     }
 }

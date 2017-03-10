@@ -40,16 +40,24 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Errors\JsException.cs" />
     <Compile Include="Errors\JsInternalException.cs" />
-    <Compile Include="Values\JsArray.cs" />
-    <Compile Include="Values\JsBoolean.cs" />
-    <Compile Include="Values\JsFunction.cs" />
-    <Compile Include="Values\JsNull.cs" />
-    <Compile Include="Values\JsNumber.cs" />
-    <Compile Include="Values\JsObject.cs" />
-    <Compile Include="Values\JsString.cs" />
-    <Compile Include="Values\JsUndefined.cs" />
-    <Compile Include="Values\JsValue.cs" />
+    <Compile Include="Errors\JsNotImplementedException.cs" />
+    <Compile Include="Errors\JsTypeErrorException.cs" />
+    <Compile Include="Integration\JsNativeMethodAttribute.cs" />
+    <Compile Include="Integration\JsNativeType.cs" />
+    <Compile Include="Integration\JsNativePropertyAttribute.cs" />
+    <Compile Include="Infrastructure\JsProperty.cs" />
+    <Compile Include="Types\JsArguments.cs" />
+    <Compile Include="Types\JsArray.cs" />
+    <Compile Include="BaseTypes\JsBoolean.cs" />
+    <Compile Include="Types\JsFunction.cs" />
+    <Compile Include="BaseTypes\JsNull.cs" />
+    <Compile Include="BaseTypes\JsNumber.cs" />
+    <Compile Include="BaseTypes\JsObject.cs" />
+    <Compile Include="BaseTypes\JsString.cs" />
+    <Compile Include="BaseTypes\JsUndefined.cs" />
+    <Compile Include="BaseTypes\JsValue.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

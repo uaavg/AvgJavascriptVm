@@ -1,6 +1,8 @@
-﻿namespace AvgJavascriptVm.Core.Values
+﻿using AvgJavascriptVm.Core.Errors;
+
+namespace AvgJavascriptVm.Core.BaseTypes
 {
-    public class JsUndefined: JsValue
+    public sealed class JsUndefined: JsValue
     {
         public static JsUndefined Instance = new JsUndefined();
 
@@ -19,9 +21,9 @@
             return false;
         }
 
-        public override JsString TypeOf()
+        public override JsObject AsObject()
         {
-            return "undefined";
+            throw new JsTypeErrorException("undefined");
         }
     }
 }

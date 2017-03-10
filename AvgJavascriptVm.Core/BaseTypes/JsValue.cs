@@ -1,4 +1,4 @@
-﻿namespace AvgJavascriptVm.Core.Values
+﻿namespace AvgJavascriptVm.Core.BaseTypes
 {
     public abstract class JsValue
     {
@@ -8,6 +8,6 @@
 
         public abstract JsBoolean AsBoolean();
 
-        public abstract JsString TypeOf();
+        public abstract JsObject AsObject();
     }
 }

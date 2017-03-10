@@ -2,9 +2,9 @@
 
 namespace AvgJavascriptVm.Core.Errors
 {
-    public class JsInternalException: ApplicationException
+    public class JsInternalException: JsException
     {
-        public JsInternalException(string messge): this(messge)
+        public JsInternalException(string messge): base(messge)
         {
             
         }
