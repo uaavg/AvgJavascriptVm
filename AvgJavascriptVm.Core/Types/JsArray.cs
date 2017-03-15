@@ -1,39 +1,44 @@
 ﻿using System.Linq;
 using AvgJavascriptVm.Core.BaseTypes;
-using AvgJavascriptVm.Core.Integration;
+using AvgJavascriptVm.Core.Infrastructure;
 
 namespace AvgJavascriptVm.Core.Types
 {
-    public class JsArray: JsNativeType
+    public class JsArray: JsObject
     {
-        public JsArray(JsValue[] values)
+        public JsArray(LexicalEnvironment lexEnv) : base(lexEnv)
+        {
+            
+        }
+
+        public JsArray(JsValue[] values, LexicalEnvironment lexEnv): base(lexEnv)
         {
             for (int i = 0; i < values.Length; i++)
             {
-                This.SetProperty(i.ToString(), values[i]);
+                SetProperty(i.ToString(), values[i]);
             }
         }
 
-        [JsNativeMethod(Name = "toString")]
-        public JsValue JsToString()
+        [JsMethod(Name = "toString")]
+        public JsValue JsToString(LexicalEnvironment lexEnv)
         {
-            if (!This.Properties.Any())
+            if (Properties.Any())
             {
                 return JsString.Empty;
             }
-            return new JsString(string.Join(",", This.Properties.Select(p => p.Value.AsString())));
+            return new JsString(string.Join(",", Properties.Select(p => p.Value.AsString())));
         }
 
-        [JsNativeMethod]
-        public JsValue ValueOf()
+        [JsMethod(Name = "valueOf")]
+        private JsValue ValueOf()
         {
-            if (!This.Properties.Any())
+            if (!Properties.Any())
             {
                 return new JsNumber(0);
             }
-            if (This.HasProperty("0"))
+            if (HasProperty("0"))
             {
-                return This.GetProperty("0").AsNumber();
+                return GetProperty("0").AsNumber();
             }
             return JsNumber.NaN;
         }

@@ -1,22 +1,16 @@
 ﻿using AvgJavascriptVm.Core.BaseTypes;
-using AvgJavascriptVm.Core.Integration;
+using AvgJavascriptVm.Core.Infrastructure;
 
 namespace AvgJavascriptVm.Core.Types
 {
-    public class JsArguments: JsNativeType
+    public class JsArguments: JsObject
     {
-        private readonly JsNumber _length;
-
-        public JsArguments(JsValue[] parameters)
+        public JsArguments(LexicalEnvironment lexEnv, JsValue[] arguments) : base(lexEnv)
         {
-            _length = parameters.Length;
-            for (int i = 0; i < parameters.Length; i++)
+            for (int i = 0; i < arguments.Length; i++)
             {
-                This.SetProperty(i.ToString(), parameters[i]);
+                SetProperty(i.ToString(), arguments[i]);
             }
-        }
-
-        [JsNativeProperty]
-        public JsValue Length => new JsNumber(_length);
+        }        
     }
 }

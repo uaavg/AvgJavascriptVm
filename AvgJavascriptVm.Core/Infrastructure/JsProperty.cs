@@ -1,5 +1,4 @@
 ﻿using AvgJavascriptVm.Core.BaseTypes;
-using AvgJavascriptVm.Core.Types;
 
 namespace AvgJavascriptVm.Core.Infrastructure
 {

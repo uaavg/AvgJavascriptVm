@@ -1,9 +1,9 @@
 ﻿using System;
 
-namespace AvgJavascriptVm.Core.Integration
+namespace AvgJavascriptVm.Core.Infrastructure
 {
     [AttributeUsage(AttributeTargets.Method)]
-    public class JsNativeMethodAttribute: Attribute
+    public class JsMethodAttribute: Attribute
     {
         public string Name { get; set; }
     }
