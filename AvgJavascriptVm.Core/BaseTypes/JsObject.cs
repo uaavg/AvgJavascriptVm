@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using AvgJavascriptVm.Core.Errors;
@@ -77,7 +76,7 @@ namespace AvgJavascriptVm.Core.BaseTypes
         [JsProperty(Name = "__proto__")]
         public JsValue JsProto
         {
-            get { return _proto ?? GetPrototype(GetType()); }
+            get { return _proto ?? (_proto = GetPrototype(GetType())); }
             set { _proto = value; }
         }
 
@@ -86,7 +85,7 @@ namespace AvgJavascriptVm.Core.BaseTypes
         [JsProperty(Name = "constructor")]
         public JsValue JsConstructor
         {
-            get { return _constructor ?? GetConstructor(); }
+            get { return _constructor ?? (_constructor = GetConstructor()); }
             set { _constructor = value; }
         }
 

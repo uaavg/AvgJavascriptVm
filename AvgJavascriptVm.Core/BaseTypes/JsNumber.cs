@@ -46,6 +46,11 @@ namespace AvgJavascriptVm.Core.BaseTypes
         public static implicit operator double(JsNumber jsNum)
         {
             return jsNum.Value;
-        }        
+        }
+
+        public int ToInt32()
+        {
+            return (int) Value;
+        }
     }
 }

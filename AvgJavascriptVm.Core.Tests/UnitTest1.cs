@@ -14,6 +14,7 @@ namespace AvgJavascriptVm.Core.Tests
         {
             var global = new GlobalScope();
             var arr = new JsArray(new JsValue[] { new JsString("23232"), }, global);
+            var constr = arr.JsConstructor;
         }
     }
 }

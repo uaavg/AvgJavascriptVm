@@ -9,8 +9,9 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>AvgJavascriptVm.Core</RootNamespace>
     <AssemblyName>AvgJavascriptVm.Core</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -20,6 +21,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <LangVersion>7</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -54,6 +56,7 @@
     <Compile Include="Infrastructure\JsPropertyAttribute.cs" />
     <Compile Include="Infrastructure\LexicalEnvironment.cs" />
     <Compile Include="Infrastructure\JsProperty.cs" />
+    <Compile Include="Operators\UnaryOperators.cs" />
     <Compile Include="Types\JsArguments.cs" />
     <Compile Include="Types\JsArray.cs" />
     <Compile Include="BaseTypes\JsBoolean.cs" />
@@ -63,8 +66,7 @@
     <Compile Include="BaseTypes\JsString.cs" />
     <Compile Include="BaseTypes\JsUndefined.cs" />
     <Compile Include="BaseTypes\JsValue.cs" />
-    <Compile Include="Operators\BinaryOperators.cs" />
-    <Compile Include="Operators\TernaryOperators.cs" />
+    <Compile Include="Operators\MemberOperators.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

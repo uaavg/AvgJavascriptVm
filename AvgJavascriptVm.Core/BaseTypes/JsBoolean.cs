@@ -10,7 +10,7 @@ namespace AvgJavascriptVm.Core.BaseTypes
 
         public bool Value { get;  }
 
-        private JsBoolean(bool value)
+        public JsBoolean(bool value)
         {
             Value = value;
         }
