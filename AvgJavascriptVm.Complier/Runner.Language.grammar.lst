@@ -1,0 +1,58 @@
+
+// ==========================================================================
+//  GPPG error listing for yacc source file <Runner.Language.grammar.y - 6/19/2017 6:17:48 PM>
+// ==========================================================================
+//  Version:  1.5.2
+//  Machine:  TX-P-0038
+//  DateTime: 6/19/2017 6:17:50 PM
+//  UserName: artem.glynskyi
+// ==========================================================================
+
+
+%namespace AvgJavascriptVm.Complier
+%using AvgJavascriptVm.Core.BaseTypes
+%partial
+%parsertype RunnerParser
+%visibility internal
+%tokentype Token
+
+%union { 			
+            public JsValue v;
+	   }
+
+%start main
+
+%token FUNCTION, IF, WHILE, DO, FOR
+%token SEMICOLON, COMMA,  LPARENTH, RPARENTH, LCURLYBRACE, RCURLYBRACE
+%token NUMBER, IDENTIFIER
+
+%%
+// Warning: NonTerminal symbol "arguments_list" is unreachable
+// -----------------------------------------------------------
+
+main : statements
+     ;
+
+statements : 
+           | statement
+           | statements statement
+           ;
+
+statement : block 
+//          | function_declaration
+	      ;
+
+//function_declaration : FUNCTION LPARENTH arguments_list RPARENTH function_body
+                     //;
+
+//function_body : block
+//              ;
+
+block : LCURLYBRACE RCURLYBRACE
+      ;
+
+arguments_list : IDENTIFIER
+               | arguments_list COMMA IDENTIFIER
+               ;
+%%// ==========================================================================
+

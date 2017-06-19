@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>AvgJavascriptVm.Core.Tests</RootNamespace>
     <AssemblyName>AvgJavascriptVm.Core.Tests</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">15.0</VisualStudioVersion>
@@ -19,6 +19,7 @@
     <TestProjectType>UnitTest</TestProjectType>
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -52,8 +53,12 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\AvgJavascriptVm.Complier\AvgJavascriptVm.Complier.csproj">
+      <Project>{e0be7277-d977-4151-848a-3a2e85b59c45}</Project>
+      <Name>AvgJavascriptVm.Complier</Name>
+    </ProjectReference>
     <ProjectReference Include="..\AvgJavascriptVm.Core\AvgJavascriptVm.Core.csproj">
-      <Project>{49CBDDD8-9E52-49A1-A6A3-FF136916A9B0}</Project>
+      <Project>{49cbddd8-9e52-49a1-a6a3-ff136916a9b0}</Project>
       <Name>AvgJavascriptVm.Core</Name>
     </ProjectReference>
   </ItemGroup>

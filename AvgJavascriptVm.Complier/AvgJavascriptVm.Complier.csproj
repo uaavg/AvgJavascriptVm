@@ -1,0 +1,110 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{E0BE7277-D977-4151-848A-3A2E85B59C45}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>AvgJavascriptVm.Complier</RootNamespace>
+    <AssemblyName>AvgJavascriptVm.Complier</AssemblyName>
+    <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Label="YltParsers">
+    <Names>Runner</Names>
+  </PropertyGroup>
+  <PropertyGroup Label="YltProperties">
+    <YltTools>$(SolutionDir)packages\YaccLexTools.0.2.2\tools\</YltTools>
+    <GplexTool>"$(YltTools)gplex.exe"</GplexTool>
+    <GppgTool>"$(YltTools)gppg.exe"</GppgTool>
+  </PropertyGroup>
+  <PropertyGroup Label="GenerateRunnerProperties">
+    <RunnerParser>$(ProjectDir)Runner</RunnerParser>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Class1.cs" />
+    <Compile Include="GplexBuffers.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ShiftReduceParserCode.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup Label="RunnerFiles">
+    <Compile Include="Runner.Parser.cs">
+      <DependentUpon>Runner.parser</DependentUpon>
+    </Compile>
+    <Compile Include="Runner.Parser.Generated.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Runner.Language.grammar.y</DependentUpon>
+    </Compile>
+    <Compile Include="Runner.Scanner.cs">
+      <DependentUpon>Runner.parser</DependentUpon>
+    </Compile>
+    <Compile Include="Runner.Scanner.Generated.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Runner.Language.analyzer.lex</DependentUpon>
+    </Compile>
+    <None Include="Runner.Language.analyzer.lex">
+      <DependentUpon>Runner.parser</DependentUpon>
+    </None>
+    <None Include="Runner.Language.grammar.y">
+      <DependentUpon>Runner.parser</DependentUpon>
+    </None>
+    <None Include="Runner.parser" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\AvgJavascriptVm.Core\AvgJavascriptVm.Core.csproj">
+      <Project>{49cbddd8-9e52-49a1-a6a3-ff136916a9b0}</Project>
+      <Name>AvgJavascriptVm.Core</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Syntax\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Target Name="BeforeBuild" DependsOnTargets="YltBuildGen" />
+  <Target Name="YltBuildGen" DependsOnTargets="GenerateRunner" />
+  <Target Name="GenerateRunner" Inputs="$(RunnerParser).Language.analyzer.lex;$(RunnerParser).Language.grammar.y" Outputs="$(RunnerParser).Scanner.Generated.cs;$(RunnerParser).Parser.Generated.cs">
+    <Message Text="Generating scanner for $(RunnerParser) ..." />
+    <Exec Command="$(GplexTool) &quot;/out:$(RunnerParser).Scanner.Generated.cs&quot; &quot;$(RunnerParser).Language.analyzer.lex&quot;" WorkingDirectory="$(ProjectDir)" Outputs="$(GenDir)Scanner.cs">
+      <Output TaskParameter="Outputs" ItemName="RunnerScanner" />
+    </Exec>
+    <Message Text="Generating parser for $(RunnerParser) ..." />
+    <Exec Command="$(GppgTool) /no-lines /gplex &quot;$(RunnerParser).Language.grammar.y&quot; &gt; &quot;$(RunnerParser).Parser.Generated.cs&quot;" WorkingDirectory="$(ProjectDir)" Outputs="$(RunnerParser).Parser.Generated.cs">
+      <Output TaskParameter="Outputs" ItemName="Runner" />
+    </Exec>
+  </Target>
+</Project>

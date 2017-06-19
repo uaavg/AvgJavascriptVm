@@ -1,0 +1,48 @@
+
+// ==========================================================================
+//  GPLEX error listing for lex source file <Runner.Language.analyzer.lex>
+// ==========================================================================
+//  Version:  1.2.2
+//  Machine:  TX-P-0038
+//  DateTime: 6/12/2017 3:42:21 PM
+//  UserName: artem.glynskyi
+// ==========================================================================
+
+
+%namespace AvgJavascriptVm.Complier
+%scannertype RunnerScanner
+%visibility internal
+%tokentype Token
+
+%option stack, minimize, parser, verbose, persistbuffer, noembedbuffers 
+
+Eol             (\r\n?|\n)
+Space           [ \t]
+Number          [0-9]+(.[0-9]+)?
+Identifier      [a-z]+([a-z]|[0-9])*
+Var
+// Error: Expected space here
+// --------------------------
+
+%{
+// Error: Expected end-of-line here
+// --------------------------------
+
+%}
+// Error: Unexpected symbol, skipping to  <%%> 
+// Error: Parser error <Syntax error, unexpected %}> 
+// --------------------------------------------------
+
+%%
+
+/* Scanner body */
+
+"function"      { return (int)Token.FUNCITON; } 
+{Number}		{ GetNumber(); return (int)Token.NUMBER; }
+{Identifier}    { return (int)Token.IDENTIFIER; }
+{Space}+		/* skip */
+
+
+
+%%// ==========================================================================
+

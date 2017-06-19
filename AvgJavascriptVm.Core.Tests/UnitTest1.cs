@@ -2,7 +2,6 @@
 using AvgJavascriptVm.Core.Infrastructure;
 using AvgJavascriptVm.Core.Types;
 using NUnit.Framework;
-using NUnit.Framework.Internal;
 
 namespace AvgJavascriptVm.Core.Tests
 {
@@ -12,9 +11,7 @@ namespace AvgJavascriptVm.Core.Tests
         [Test]
         public void TestMethod1()
         {
-            var global = new GlobalScope();
-            var arr = new JsArray(new JsValue[] { new JsString("23232"), }, global);
-            var constr = arr.JsConstructor;
+            
         }
     }
 }
