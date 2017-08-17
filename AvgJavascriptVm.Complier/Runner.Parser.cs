@@ -1,11 +1,20 @@
 using System.IO;
 using System.Text;
+using AvgJavascriptVm.Core.Infrastructure;
+using AvgJavascriptVm.Grammar.Nodes;
 
 namespace AvgJavascriptVm.Complier
 {
     internal partial class RunnerParser
     {
-        public RunnerParser() : base(null) { }
+        public GlobalScope GlobalEnvironment { get; }
+
+        public StatementsNode Result { get; private set; }
+
+        public RunnerParser(GlobalScope globalEnvironment) : base(null)
+        {
+            GlobalEnvironment = globalEnvironment;
+        }
 
         public void Parse(string s)
         {

@@ -15,13 +15,13 @@ namespace AvgJavascriptVm.Core.Infrastructure
             SetProperty("name", new JsString(name));
         }
 
-        protected override JsValue CallInternal(LexicalEnvironment lexEnvironment)
+        protected override JsValue CallInternal(LexicalEnvironment env)
         {
-            return _action(lexEnvironment);
+            return _action(env);
         }
 
         [JsMethod(Name = "toString")]
-        public static JsValue JsToString(LexicalEnvironment lexEnv)
+        public static JsValue JsToString(LexicalEnvironment env)
         {
             return new JsString("function () { [native code] }");
         }

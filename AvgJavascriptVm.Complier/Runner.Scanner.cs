@@ -1,5 +1,4 @@
 using System;
-using AvgJavascriptVm.Core.BaseTypes;
 
 namespace AvgJavascriptVm.Complier
 {
@@ -7,12 +6,12 @@ namespace AvgJavascriptVm.Complier
     {
         void GetNumber()
         {
-            yylval.v = new JsNumber(double.Parse(yytext));            
+            yylval.num = double.Parse(yytext);            
         }
 
         void GetIdentifier()
         {
-            yylval.v = new JsString(yytext);
+            yylval.str = yytext;
         }
 
 		public override void yyerror(string format, params object[] args)

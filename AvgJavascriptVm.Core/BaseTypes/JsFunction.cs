@@ -29,6 +29,6 @@ namespace AvgJavascriptVm.Core.BaseTypes
             return CallInternal(lexicalEnv);
         }
 
-        protected abstract JsValue CallInternal(LexicalEnvironment lexEnvironment);        
+        protected abstract JsValue CallInternal(LexicalEnvironment env);        
     }
 }

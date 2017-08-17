@@ -4,7 +4,7 @@
 // ==========================================================================
 //  Version:  1.2.2
 //  Machine:  TX-P-0038
-//  DateTime: 6/12/2017 3:42:21 PM
+//  DateTime: 8/17/2017 5:32:25 PM
 //  UserName: artem.glynskyi
 // ==========================================================================
 
@@ -13,36 +13,50 @@
 %scannertype RunnerScanner
 %visibility internal
 %tokentype Token
+%using AvgJavascriptVm.Grammar
 
 %option stack, minimize, parser, verbose, persistbuffer, noembedbuffers 
+//^^^^^
+// Error: Unexpected symbol, skipping to  <%%> 
+// Error: Parser error <Syntax error, unexpected %option, expecting ;, or .> 
+// --------------------------------------------------------------------------
 
 Eol             (\r\n?|\n)
 Space           [ \t]
 Number          [0-9]+(.[0-9]+)?
 Identifier      [a-z]+([a-z]|[0-9])*
-Var
-// Error: Expected space here
-// --------------------------
 
 %{
-// Error: Expected end-of-line here
-// --------------------------------
 
 %}
-// Error: Unexpected symbol, skipping to  <%%> 
-// Error: Parser error <Syntax error, unexpected %}> 
-// --------------------------------------------------
 
 %%
 
 /* Scanner body */
 
-"function"      { return (int)Token.FUNCITON; } 
+"function"      { return (int)Token.FUNCTION; } 
+"if"            { return (int)Token.IF; }
+"while"         { return (int)Token.WHILE; }
+"do"            { return (int)Token.DO; }
+"for"           { return (int)Token.FOR; }
+";"             { return (int)Token.SEMICOLON; }
+","             { return (int)Token.COMMA; }
+"("             { return (int)Token.LPARENTH; }
+")"             { return (int)Token.RPARENTH; }
+"{"             { return (int)Token.LCURLYBRACE; }
+"}"             { return (int)Token.RCURLYBRACE; }
 {Number}		{ GetNumber(); return (int)Token.NUMBER; }
-{Identifier}    { return (int)Token.IDENTIFIER; }
+//^^^^^
+// Error: Unknown lexical category <Number> 
+// -----------------------------------------
+{Identifier}    { GetIdentifier(); return (int)Token.IDENTIFIER; }
+//^^^^^^^^^
+// Error: Unknown lexical category <Identifier> 
+// ---------------------------------------------
 {Space}+		/* skip */
-
-
+//^^^^
+// Error: Unknown lexical category <Space> 
+// ----------------------------------------
 
 %%// ==========================================================================
 

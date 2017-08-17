@@ -4,9 +4,9 @@
 
 // GPPG version 1.5.2
 // Machine:  TX-P-0038
-// DateTime: 6/19/2017 6:18:04 PM
+// DateTime: 8/17/2017 6:19:02 PM
 // UserName: artem.glynskyi
-// Input file <Runner.Language.grammar.y - 6/19/2017 6:18:03 PM>
+// Input file <Runner.Language.grammar.y - 8/17/2017 6:19:00 PM>
 
 // options: no-lines gplex
 
@@ -17,6 +17,7 @@ using System.Globalization;
 using System.Text;
 using QUT.Gppg;
 using AvgJavascriptVm.Core.BaseTypes;
+using AvgJavascriptVm.Grammar.Nodes;
 
 namespace AvgJavascriptVm.Complier
 {
@@ -26,7 +27,9 @@ internal enum Token {error=2,EOF=3,FUNCTION=4,IF=5,WHILE=6,
 
 internal partial struct ValueType
 { 			
-            public JsValue v;
+			public double num;
+            public string str;
+			public Node n;
 	   }
 // Abstract base class for GPLEX scanners
 [GeneratedCodeAttribute( "Gardens Point Parser Generator", "1.5.2")]
@@ -53,47 +56,50 @@ internal partial class RunnerParser: ShiftReduceParser<ValueType, LexLocation>
 #pragma warning disable 649
   private static Dictionary<int, string> aliases;
 #pragma warning restore 649
-  private static Rule[] rules = new Rule[13];
-  private static State[] states = new State[19];
+  private static Rule[] rules = new Rule[15];
+  private static State[] states = new State[20];
   private static string[] nonTerms = new string[] {
       "main", "$accept", "statements", "statement", "block", "function_declaration", 
       "arguments_list", "function_body", };
 
   static RunnerParser() {
-    states[0] = new State(new int[]{13,6,4,9,3,-3},new int[]{-1,1,-3,3,-4,18,-5,5,-6,8});
+    states[0] = new State(new int[]{13,6,4,9,3,-3},new int[]{-1,1,-3,3,-4,19,-5,5,-6,8});
     states[1] = new State(new int[]{3,2});
     states[2] = new State(-1);
     states[3] = new State(new int[]{13,6,4,9,3,-2},new int[]{-4,4,-5,5,-6,8});
-    states[4] = new State(-5);
-    states[5] = new State(-6);
+    states[4] = new State(-6);
+    states[5] = new State(-7);
     states[6] = new State(new int[]{14,7});
-    states[7] = new State(-10);
-    states[8] = new State(-7);
-    states[9] = new State(new int[]{11,10});
-    states[10] = new State(new int[]{16,17},new int[]{-7,11});
-    states[11] = new State(new int[]{12,12,10,15});
-    states[12] = new State(new int[]{13,6},new int[]{-8,13,-5,14});
-    states[13] = new State(-8);
+    states[7] = new State(-11);
+    states[8] = new State(-8);
+    states[9] = new State(new int[]{16,10});
+    states[10] = new State(new int[]{11,11});
+    states[11] = new State(new int[]{16,18,12,-14,10,-14},new int[]{-7,12});
+    states[12] = new State(new int[]{12,13,10,16});
+    states[13] = new State(new int[]{13,6},new int[]{-8,14,-5,15});
     states[14] = new State(-9);
-    states[15] = new State(new int[]{16,16});
-    states[16] = new State(-12);
-    states[17] = new State(-11);
-    states[18] = new State(-4);
+    states[15] = new State(-10);
+    states[16] = new State(new int[]{16,17});
+    states[17] = new State(-13);
+    states[18] = new State(-12);
+    states[19] = new State(-5);
 
     for (int sNo = 0; sNo < states.Length; sNo++) states[sNo].number = sNo;
 
     rules[1] = new Rule(-2, new int[]{-1,3});
     rules[2] = new Rule(-1, new int[]{-3});
-    rules[3] = new Rule(-3, new int[]{});
-    rules[4] = new Rule(-3, new int[]{-4});
-    rules[5] = new Rule(-3, new int[]{-3,-4});
-    rules[6] = new Rule(-4, new int[]{-5});
-    rules[7] = new Rule(-4, new int[]{-6});
-    rules[8] = new Rule(-6, new int[]{4,11,-7,12,-8});
-    rules[9] = new Rule(-8, new int[]{-5});
-    rules[10] = new Rule(-5, new int[]{13,14});
-    rules[11] = new Rule(-7, new int[]{16});
-    rules[12] = new Rule(-7, new int[]{-7,10,16});
+    rules[3] = new Rule(-1, new int[]{});
+    rules[4] = new Rule(-3, new int[]{});
+    rules[5] = new Rule(-3, new int[]{-4});
+    rules[6] = new Rule(-3, new int[]{-3,-4});
+    rules[7] = new Rule(-4, new int[]{-5});
+    rules[8] = new Rule(-4, new int[]{-6});
+    rules[9] = new Rule(-6, new int[]{4,16,11,-7,12,-8});
+    rules[10] = new Rule(-8, new int[]{-5});
+    rules[11] = new Rule(-5, new int[]{13,14});
+    rules[12] = new Rule(-7, new int[]{16});
+    rules[13] = new Rule(-7, new int[]{-7,10,16});
+    rules[14] = new Rule(-7, new int[]{});
   }
 
   protected override void Initialize() {
@@ -108,6 +114,40 @@ internal partial class RunnerParser: ShiftReduceParser<ValueType, LexLocation>
 #pragma warning disable 162, 1522
     switch (action)
     {
+      case 2: // main -> statements
+{ Result = (StatementsNode)ValueStack[ValueStack.Depth-1].n; }
+        break;
+      case 5: // statements -> statement
+{ var stmts = new StatementsNode(); stmts.Statements.Add((StatementNode)ValueStack[ValueStack.Depth-1].n); CurrentSemanticValue.n = stmts; }
+        break;
+      case 6: // statements -> statements, statement
+{ ((StatementsNode)ValueStack[ValueStack.Depth-2].n).Statements.Add((StatementNode)ValueStack[ValueStack.Depth-1].n); }
+        break;
+      case 7: // statement -> block
+{ CurrentSemanticValue.n = ValueStack[ValueStack.Depth-1].n; }
+        break;
+      case 8: // statement -> function_declaration
+{ CurrentSemanticValue.n = ValueStack[ValueStack.Depth-1].n; }
+        break;
+      case 9: // function_declaration -> FUNCTION, IDENTIFIER, LPARENTH, arguments_list, 
+              //                         RPARENTH, function_body
+{ CurrentSemanticValue.n = new FunctionNode(new IdentifierNode(ValueStack[ValueStack.Depth-5].str), (ArgumentsListNode)ValueStack[ValueStack.Depth-3].n, (BlockNode)ValueStack[ValueStack.Depth-1].n); }
+        break;
+      case 10: // function_body -> block
+{ CurrentSemanticValue.n = ValueStack[ValueStack.Depth-1].n; }
+        break;
+      case 11: // block -> LCURLYBRACE, RCURLYBRACE
+{ CurrentSemanticValue.n = new BlockNode(new StatementsNode()); }
+        break;
+      case 12: // arguments_list -> IDENTIFIER
+{ CurrentSemanticValue.n = new ArgumentsListNode(new IdentifierNode(ValueStack[ValueStack.Depth-1].str)); }
+        break;
+      case 13: // arguments_list -> arguments_list, COMMA, IDENTIFIER
+{ CurrentSemanticValue.n = new ArgumentsListNode((ArgumentsListNode)ValueStack[ValueStack.Depth-3].n, new IdentifierNode(ValueStack[ValueStack.Depth-1].str)); }
+        break;
+      case 14: // arguments_list -> /* empty */
+{ CurrentSemanticValue.n = new ArgumentsListNode(); }
+        break;
     }
 #pragma warning restore 162, 1522
   }

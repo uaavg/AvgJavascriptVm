@@ -90,6 +90,10 @@
       <Project>{49cbddd8-9e52-49a1-a6a3-ff136916a9b0}</Project>
       <Name>AvgJavascriptVm.Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\AvgJavascriptVm.Grammar\AvgJavascriptVm.Grammar.csproj">
+      <Project>{e4bb2a5e-fbe7-4a4f-815b-c100e57dc484}</Project>
+      <Name>AvgJavascriptVm.Grammar</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Syntax\" />

@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+using AvgJavascriptVm.Core.Infrastructure;
 
 namespace AvgJavascriptVm.Complier
 {
@@ -13,9 +11,9 @@ namespace AvgJavascriptVm.Complier
         {
             var sb = new StringBuilder();
             Console.SetOut(new StringWriter(sb));
-            var parser = new RunnerParser();
+            var parser = new RunnerParser(new GlobalScope());
 
-            parser.Parse("functiona");
+            parser.Parse("function test(a, b)  { }");
         }
     }
 }
