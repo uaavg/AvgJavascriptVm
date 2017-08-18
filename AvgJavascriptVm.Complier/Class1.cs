@@ -2,6 +2,7 @@
 using System.IO;
 using System.Text;
 using AvgJavascriptVm.Core.Infrastructure;
+using AvgJavascriptVm.Grammar.Helpers;
 
 namespace AvgJavascriptVm.Complier
 {
@@ -13,7 +14,9 @@ namespace AvgJavascriptVm.Complier
             Console.SetOut(new StringWriter(sb));
             var parser = new RunnerParser(new GlobalScope());
 
-            parser.Parse("function test(a, b)  { }");
+   
+            parser.Parse("function test(a, b, c) { while(true) { for(;b;) { do { } while(false); } } return; }");
+            parser.Result.ToString(new NodeStringBuilder());
         }
     }
 }

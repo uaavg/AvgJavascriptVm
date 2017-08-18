@@ -1,7 +1,12 @@
-﻿namespace AvgJavascriptVm.Grammar.Nodes
+﻿using AvgJavascriptVm.Grammar.Helpers;
+
+namespace AvgJavascriptVm.Grammar.Nodes
 {
-    public abstract class ExpressionNode: Node
+    public class ExpressionNode: StatementNode
     {
-        
+        public override void ToString(NodeStringBuilder strBuilder)
+        {
+            strBuilder.Append("exp");
+        }
     }
 }

@@ -23,6 +23,7 @@ Identifier      [a-z]+([a-z]|[0-9])*
 "while"         { return (int)Token.WHILE; }
 "do"            { return (int)Token.DO; }
 "for"           { return (int)Token.FOR; }
+"return"        { return (int)Token.RETURN; }
 ";"             { return (int)Token.SEMICOLON; }
 ","             { return (int)Token.COMMA; }
 "("             { return (int)Token.LPARENTH; }

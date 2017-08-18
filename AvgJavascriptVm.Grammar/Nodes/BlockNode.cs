@@ -4,6 +4,11 @@ namespace AvgJavascriptVm.Grammar.Nodes
 {
     public class BlockNode : StatementNode
     {
+        public BlockNode()
+        {
+            
+        }
+
         public BlockNode(StatementsNode statements)
         {
             Statements = statements;
@@ -13,7 +18,7 @@ namespace AvgJavascriptVm.Grammar.Nodes
 
         public override void ToString(NodeStringBuilder strBuilder)
         {
-            var isMultiLine = Statements.Statements.Count > 0;
+            var isMultiLine = Statements?.Statements?.Count > 0;
 
             strBuilder.Append("{");
             if (isMultiLine)
@@ -22,7 +27,7 @@ namespace AvgJavascriptVm.Grammar.Nodes
             }
             using (strBuilder.Indent())
             {
-                Statements.ToString(strBuilder);
+                Statements?.ToString(strBuilder);
             }
             if (isMultiLine)
             {

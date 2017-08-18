@@ -4,9 +4,9 @@
 
 // GPPG version 1.5.2
 // Machine:  TX-P-0038
-// DateTime: 8/17/2017 6:19:02 PM
+// DateTime: 8/18/2017 5:30:41 PM
 // UserName: artem.glynskyi
-// Input file <Runner.Language.grammar.y - 8/17/2017 6:19:00 PM>
+// Input file <Runner.Language.grammar.y - 8/18/2017 5:30:39 PM>
 
 // options: no-lines gplex
 
@@ -22,8 +22,8 @@ using AvgJavascriptVm.Grammar.Nodes;
 namespace AvgJavascriptVm.Complier
 {
 internal enum Token {error=2,EOF=3,FUNCTION=4,IF=5,WHILE=6,
-    DO=7,FOR=8,SEMICOLON=9,COMMA=10,LPARENTH=11,RPARENTH=12,
-    LCURLYBRACE=13,RCURLYBRACE=14,NUMBER=15,IDENTIFIER=16};
+    DO=7,FOR=8,RETURN=9,SEMICOLON=10,COMMA=11,LPARENTH=12,
+    RPARENTH=13,LCURLYBRACE=14,RCURLYBRACE=15,NUMBER=16,IDENTIFIER=17};
 
 internal partial struct ValueType
 { 			
@@ -56,33 +56,75 @@ internal partial class RunnerParser: ShiftReduceParser<ValueType, LexLocation>
 #pragma warning disable 649
   private static Dictionary<int, string> aliases;
 #pragma warning restore 649
-  private static Rule[] rules = new Rule[15];
-  private static State[] states = new State[20];
+  private static Rule[] rules = new Rule[34];
+  private static State[] states = new State[60];
   private static string[] nonTerms = new string[] {
       "main", "$accept", "statements", "statement", "block", "function_declaration", 
-      "arguments_list", "function_body", };
+      "while", "dowhile", "for", "expression", "arguments_list", "function_body", 
+      "function_statements", "function_statement", "return", "expression_or_empty", 
+      };
 
   static RunnerParser() {
-    states[0] = new State(new int[]{13,6,4,9,3,-3},new int[]{-1,1,-3,3,-4,19,-5,5,-6,8});
+    states[0] = new State(new int[]{14,6,4,10,6,22,7,30,8,38,3,-3},new int[]{-1,1,-3,3,-4,59,-5,5,-6,9,-7,21,-8,29,-9,37});
     states[1] = new State(new int[]{3,2});
     states[2] = new State(-1);
-    states[3] = new State(new int[]{13,6,4,9,3,-2},new int[]{-4,4,-5,5,-6,8});
+    states[3] = new State(new int[]{14,6,4,10,6,22,7,30,8,38,3,-2},new int[]{-4,4,-5,5,-6,9,-7,21,-8,29,-9,37});
     states[4] = new State(-6);
     states[5] = new State(-7);
-    states[6] = new State(new int[]{14,7});
-    states[7] = new State(-11);
-    states[8] = new State(-8);
-    states[9] = new State(new int[]{16,10});
-    states[10] = new State(new int[]{11,11});
-    states[11] = new State(new int[]{16,18,12,-14,10,-14},new int[]{-7,12});
-    states[12] = new State(new int[]{12,13,10,16});
-    states[13] = new State(new int[]{13,6},new int[]{-8,14,-5,15});
-    states[14] = new State(-9);
-    states[15] = new State(-10);
-    states[16] = new State(new int[]{16,17});
-    states[17] = new State(-13);
-    states[18] = new State(-12);
-    states[19] = new State(-5);
+    states[6] = new State(new int[]{14,6,4,10,6,22,7,30,8,38,15,-4},new int[]{-3,7,-4,59,-5,5,-6,9,-7,21,-8,29,-9,37});
+    states[7] = new State(new int[]{15,8,14,6,4,10,6,22,7,30,8,38},new int[]{-4,4,-5,5,-6,9,-7,21,-8,29,-9,37});
+    states[8] = new State(-13);
+    states[9] = new State(-8);
+    states[10] = new State(new int[]{17,11});
+    states[11] = new State(new int[]{12,12});
+    states[12] = new State(new int[]{17,58,13,-33,11,-33},new int[]{-11,13});
+    states[13] = new State(new int[]{13,14,11,56});
+    states[14] = new State(new int[]{14,16},new int[]{-12,15});
+    states[15] = new State(-14);
+    states[16] = new State(new int[]{14,6,4,10,6,22,7,30,8,38,9,51,15,-16},new int[]{-13,17,-14,55,-4,20,-5,5,-6,9,-7,21,-8,29,-9,37,-15,50});
+    states[17] = new State(new int[]{15,18,14,6,4,10,6,22,7,30,8,38,9,51},new int[]{-14,19,-4,20,-5,5,-6,9,-7,21,-8,29,-9,37,-15,50});
+    states[18] = new State(-15);
+    states[19] = new State(-18);
+    states[20] = new State(-19);
+    states[21] = new State(-9);
+    states[22] = new State(new int[]{12,23});
+    states[23] = new State(new int[]{17,28},new int[]{-10,24});
+    states[24] = new State(new int[]{13,25});
+    states[25] = new State(new int[]{17,28,14,6},new int[]{-10,26,-5,27});
+    states[26] = new State(-23);
+    states[27] = new State(-24);
+    states[28] = new State(-12);
+    states[29] = new State(-10);
+    states[30] = new State(new int[]{14,6},new int[]{-5,31});
+    states[31] = new State(new int[]{6,32});
+    states[32] = new State(new int[]{12,33});
+    states[33] = new State(new int[]{17,28},new int[]{-10,34});
+    states[34] = new State(new int[]{13,35});
+    states[35] = new State(new int[]{10,36});
+    states[36] = new State(-25);
+    states[37] = new State(-11);
+    states[38] = new State(new int[]{12,39});
+    states[39] = new State(new int[]{17,28,10,-30},new int[]{-16,40,-10,49});
+    states[40] = new State(new int[]{10,41});
+    states[41] = new State(new int[]{17,28,10,-30},new int[]{-16,42,-10,49});
+    states[42] = new State(new int[]{10,43});
+    states[43] = new State(new int[]{17,28,13,-30},new int[]{-16,44,-10,49});
+    states[44] = new State(new int[]{13,45});
+    states[45] = new State(new int[]{10,48,17,28,14,6},new int[]{-10,46,-5,47});
+    states[46] = new State(-26);
+    states[47] = new State(-27);
+    states[48] = new State(-28);
+    states[49] = new State(-29);
+    states[50] = new State(-20);
+    states[51] = new State(new int[]{10,52,17,28},new int[]{-10,53});
+    states[52] = new State(-21);
+    states[53] = new State(new int[]{10,54});
+    states[54] = new State(-22);
+    states[55] = new State(-17);
+    states[56] = new State(new int[]{17,57});
+    states[57] = new State(-32);
+    states[58] = new State(-31);
+    states[59] = new State(-5);
 
     for (int sNo = 0; sNo < states.Length; sNo++) states[sNo].number = sNo;
 
@@ -94,12 +136,31 @@ internal partial class RunnerParser: ShiftReduceParser<ValueType, LexLocation>
     rules[6] = new Rule(-3, new int[]{-3,-4});
     rules[7] = new Rule(-4, new int[]{-5});
     rules[8] = new Rule(-4, new int[]{-6});
-    rules[9] = new Rule(-6, new int[]{4,16,11,-7,12,-8});
-    rules[10] = new Rule(-8, new int[]{-5});
-    rules[11] = new Rule(-5, new int[]{13,14});
-    rules[12] = new Rule(-7, new int[]{16});
-    rules[13] = new Rule(-7, new int[]{-7,10,16});
-    rules[14] = new Rule(-7, new int[]{});
+    rules[9] = new Rule(-4, new int[]{-7});
+    rules[10] = new Rule(-4, new int[]{-8});
+    rules[11] = new Rule(-4, new int[]{-9});
+    rules[12] = new Rule(-10, new int[]{17});
+    rules[13] = new Rule(-5, new int[]{14,-3,15});
+    rules[14] = new Rule(-6, new int[]{4,17,12,-11,13,-12});
+    rules[15] = new Rule(-12, new int[]{14,-13,15});
+    rules[16] = new Rule(-13, new int[]{});
+    rules[17] = new Rule(-13, new int[]{-14});
+    rules[18] = new Rule(-13, new int[]{-13,-14});
+    rules[19] = new Rule(-14, new int[]{-4});
+    rules[20] = new Rule(-14, new int[]{-15});
+    rules[21] = new Rule(-15, new int[]{9,10});
+    rules[22] = new Rule(-15, new int[]{9,-10,10});
+    rules[23] = new Rule(-7, new int[]{6,12,-10,13,-10});
+    rules[24] = new Rule(-7, new int[]{6,12,-10,13,-5});
+    rules[25] = new Rule(-8, new int[]{7,-5,6,12,-10,13,10});
+    rules[26] = new Rule(-9, new int[]{8,12,-16,10,-16,10,-16,13,-10});
+    rules[27] = new Rule(-9, new int[]{8,12,-16,10,-16,10,-16,13,-5});
+    rules[28] = new Rule(-9, new int[]{8,12,-16,10,-16,10,-16,13,10});
+    rules[29] = new Rule(-16, new int[]{-10});
+    rules[30] = new Rule(-16, new int[]{});
+    rules[31] = new Rule(-11, new int[]{17});
+    rules[32] = new Rule(-11, new int[]{-11,11,17});
+    rules[33] = new Rule(-11, new int[]{});
   }
 
   protected override void Initialize() {
@@ -117,6 +178,9 @@ internal partial class RunnerParser: ShiftReduceParser<ValueType, LexLocation>
       case 2: // main -> statements
 { Result = (StatementsNode)ValueStack[ValueStack.Depth-1].n; }
         break;
+      case 4: // statements -> /* empty */
+{ CurrentSemanticValue.n = new StatementsNode(); }
+        break;
       case 5: // statements -> statement
 { var stmts = new StatementsNode(); stmts.Statements.Add((StatementNode)ValueStack[ValueStack.Depth-1].n); CurrentSemanticValue.n = stmts; }
         break;
@@ -129,23 +193,71 @@ internal partial class RunnerParser: ShiftReduceParser<ValueType, LexLocation>
       case 8: // statement -> function_declaration
 { CurrentSemanticValue.n = ValueStack[ValueStack.Depth-1].n; }
         break;
-      case 9: // function_declaration -> FUNCTION, IDENTIFIER, LPARENTH, arguments_list, 
-              //                         RPARENTH, function_body
+      case 12: // expression -> IDENTIFIER
+{ CurrentSemanticValue.n = new IdentifierNode(ValueStack[ValueStack.Depth-1].str); }
+        break;
+      case 13: // block -> LCURLYBRACE, statements, RCURLYBRACE
+{ CurrentSemanticValue.n = new BlockNode((StatementsNode)ValueStack[ValueStack.Depth-2].n); }
+        break;
+      case 14: // function_declaration -> FUNCTION, IDENTIFIER, LPARENTH, arguments_list, 
+               //                         RPARENTH, function_body
 { CurrentSemanticValue.n = new FunctionNode(new IdentifierNode(ValueStack[ValueStack.Depth-5].str), (ArgumentsListNode)ValueStack[ValueStack.Depth-3].n, (BlockNode)ValueStack[ValueStack.Depth-1].n); }
         break;
-      case 10: // function_body -> block
+      case 15: // function_body -> LCURLYBRACE, function_statements, RCURLYBRACE
+{ CurrentSemanticValue.n = new BlockNode((StatementsNode)ValueStack[ValueStack.Depth-2].n); }
+        break;
+      case 16: // function_statements -> /* empty */
+{ CurrentSemanticValue.n = new StatementsNode(); }
+        break;
+      case 17: // function_statements -> function_statement
+{ var stmts = new StatementsNode(); stmts.Statements.Add((StatementNode)ValueStack[ValueStack.Depth-1].n); CurrentSemanticValue.n = stmts; }
+        break;
+      case 18: // function_statements -> function_statements, function_statement
+{ ((StatementsNode)ValueStack[ValueStack.Depth-2].n).Statements.Add((StatementNode)ValueStack[ValueStack.Depth-1].n); }
+        break;
+      case 19: // function_statement -> statement
 { CurrentSemanticValue.n = ValueStack[ValueStack.Depth-1].n; }
         break;
-      case 11: // block -> LCURLYBRACE, RCURLYBRACE
-{ CurrentSemanticValue.n = new BlockNode(new StatementsNode()); }
+      case 20: // function_statement -> return
+{ CurrentSemanticValue.n = ValueStack[ValueStack.Depth-1].n; }
         break;
-      case 12: // arguments_list -> IDENTIFIER
+      case 21: // return -> RETURN, SEMICOLON
+{ CurrentSemanticValue.n = new ReturnNode(); }
+        break;
+      case 22: // return -> RETURN, expression, SEMICOLON
+{ CurrentSemanticValue.n = new ReturnNode((ExpressionNode)ValueStack[ValueStack.Depth-2].n); }
+        break;
+      case 23: // while -> WHILE, LPARENTH, expression, RPARENTH, expression
+{ CurrentSemanticValue.n = new WhileNode((ExpressionNode)ValueStack[ValueStack.Depth-3].n, (StatementNode)ValueStack[ValueStack.Depth-1].n); }
+        break;
+      case 24: // while -> WHILE, LPARENTH, expression, RPARENTH, block
+{ CurrentSemanticValue.n = new WhileNode((ExpressionNode)ValueStack[ValueStack.Depth-3].n, (StatementNode)ValueStack[ValueStack.Depth-1].n); }
+        break;
+      case 25: // dowhile -> DO, block, WHILE, LPARENTH, expression, RPARENTH, SEMICOLON
+{ CurrentSemanticValue.n = new DoWhileNode((ExpressionNode)ValueStack[ValueStack.Depth-3].n, (StatementNode)ValueStack[ValueStack.Depth-6].n); }
+        break;
+      case 26: // for -> FOR, LPARENTH, expression_or_empty, SEMICOLON, expression_or_empty, 
+               //        SEMICOLON, expression_or_empty, RPARENTH, expression
+{ CurrentSemanticValue.n = new ForNode((StatementNode)ValueStack[ValueStack.Depth-7].n, (StatementNode)ValueStack[ValueStack.Depth-5].n, (StatementNode)ValueStack[ValueStack.Depth-3].n, (StatementNode)ValueStack[ValueStack.Depth-1].n); }
+        break;
+      case 27: // for -> FOR, LPARENTH, expression_or_empty, SEMICOLON, expression_or_empty, 
+               //        SEMICOLON, expression_or_empty, RPARENTH, block
+{ CurrentSemanticValue.n = new ForNode((StatementNode)ValueStack[ValueStack.Depth-7].n, (StatementNode)ValueStack[ValueStack.Depth-5].n, (StatementNode)ValueStack[ValueStack.Depth-3].n, (StatementNode)ValueStack[ValueStack.Depth-1].n); }
+        break;
+      case 28: // for -> FOR, LPARENTH, expression_or_empty, SEMICOLON, expression_or_empty, 
+               //        SEMICOLON, expression_or_empty, RPARENTH, SEMICOLON
+{ CurrentSemanticValue.n = new ForNode((StatementNode)ValueStack[ValueStack.Depth-7].n, (StatementNode)ValueStack[ValueStack.Depth-5].n, (StatementNode)ValueStack[ValueStack.Depth-3].n, null); }
+        break;
+      case 29: // expression_or_empty -> expression
+{ CurrentSemanticValue.n = ValueStack[ValueStack.Depth-1].n; }
+        break;
+      case 31: // arguments_list -> IDENTIFIER
 { CurrentSemanticValue.n = new ArgumentsListNode(new IdentifierNode(ValueStack[ValueStack.Depth-1].str)); }
         break;
-      case 13: // arguments_list -> arguments_list, COMMA, IDENTIFIER
+      case 32: // arguments_list -> arguments_list, COMMA, IDENTIFIER
 { CurrentSemanticValue.n = new ArgumentsListNode((ArgumentsListNode)ValueStack[ValueStack.Depth-3].n, new IdentifierNode(ValueStack[ValueStack.Depth-1].str)); }
         break;
-      case 14: // arguments_list -> /* empty */
+      case 33: // arguments_list -> /* empty */
 { CurrentSemanticValue.n = new ArgumentsListNode(); }
         break;
     }

@@ -46,12 +46,16 @@
     <Compile Include="Infrastructure\JsCompiledFunction.cs" />
     <Compile Include="Nodes\ArgumentsListNode.cs" />
     <Compile Include="Nodes\BlockNode.cs" />
+    <Compile Include="Nodes\DoWhileNode.cs" />
     <Compile Include="Nodes\ExpressionNode.cs" />
+    <Compile Include="Nodes\ForNode.cs" />
     <Compile Include="Nodes\FunctionNode.cs" />
     <Compile Include="Nodes\IdentifierNode.cs" />
     <Compile Include="Nodes\Node.cs" />
+    <Compile Include="Nodes\ReturnNode.cs" />
     <Compile Include="Nodes\StatementNode.cs" />
     <Compile Include="Nodes\StatementsNode.cs" />
+    <Compile Include="Nodes\WhileNode.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
