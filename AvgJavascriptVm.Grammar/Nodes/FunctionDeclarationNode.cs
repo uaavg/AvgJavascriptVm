@@ -2,7 +2,7 @@
 
 namespace AvgJavascriptVm.Grammar.Nodes
 {
-    public class FunctionNode: StatementNode
+    public class FunctionDeclarationNode: Node
     {
         public IdentifierNode Name { get; }
 
@@ -10,7 +10,7 @@ namespace AvgJavascriptVm.Grammar.Nodes
 
         public BlockNode Body { get; }
 
-        public FunctionNode(IdentifierNode name, ArgumentsListNode arguments, BlockNode body)
+        public FunctionDeclarationNode(IdentifierNode name, ArgumentsListNode arguments, BlockNode body)
         {
             Name = name;
             Arguments = arguments;

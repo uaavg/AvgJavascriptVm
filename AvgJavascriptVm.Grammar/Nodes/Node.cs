@@ -8,7 +8,7 @@ namespace AvgJavascriptVm.Grammar.Nodes
 
         public override string ToString()
         {
-            var strBuilder = new NodeStringBuilder();
+            var strBuilder = new NodeStringBuilder();            
 
             ToString(strBuilder);
             return strBuilder.ToString();

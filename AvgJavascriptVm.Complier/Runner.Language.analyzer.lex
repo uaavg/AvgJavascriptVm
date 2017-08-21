@@ -20,6 +20,7 @@ Identifier      [a-z]+([a-z]|[0-9])*
 
 "function"      { return (int)Token.FUNCTION; } 
 "if"            { return (int)Token.IF; }
+"else"          { return (int)Token.ELSE; }
 "while"         { return (int)Token.WHILE; }
 "do"            { return (int)Token.DO; }
 "for"           { return (int)Token.FOR; }

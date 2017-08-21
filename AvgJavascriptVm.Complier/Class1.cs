@@ -15,7 +15,7 @@ namespace AvgJavascriptVm.Complier
             var parser = new RunnerParser(new GlobalScope());
 
    
-            parser.Parse("function test(a, b, c) { while(true) { for(;b;) { do { } while(false); } } return; }");
+            parser.Parse("if(r) d ; else ;\r\nwhile(true) df(");
             parser.Result.ToString(new NodeStringBuilder());
         }
     }

@@ -21,6 +21,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <LangVersion>7</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -47,11 +48,15 @@
     <Compile Include="Nodes\ArgumentsListNode.cs" />
     <Compile Include="Nodes\BlockNode.cs" />
     <Compile Include="Nodes\DoWhileNode.cs" />
+    <Compile Include="Nodes\EmptyExpression.cs" />
     <Compile Include="Nodes\ExpressionNode.cs" />
     <Compile Include="Nodes\ForNode.cs" />
-    <Compile Include="Nodes\FunctionNode.cs" />
+    <Compile Include="Nodes\FunctionDeclarationNode.cs" />
     <Compile Include="Nodes\IdentifierNode.cs" />
+    <Compile Include="Nodes\IfElseNode.cs" />
+    <Compile Include="Nodes\IfNode.cs" />
     <Compile Include="Nodes\Node.cs" />
+    <Compile Include="Nodes\StatementsAndDeclarations.cs" />
     <Compile Include="Nodes\ReturnNode.cs" />
     <Compile Include="Nodes\StatementNode.cs" />
     <Compile Include="Nodes\StatementsNode.cs" />
