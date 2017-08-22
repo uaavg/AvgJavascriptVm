@@ -6,9 +6,9 @@
 //
 //  GPLEX Version:  1.2.2
 //  Machine:  TX-P-0038
-//  DateTime: 8/21/2017 5:06:09 PM
+//  DateTime: 8/22/2017 5:26:01 PM
 //  UserName: artem.glynskyi
-//  GPLEX input file <Runner.Language.analyzer.lex - 8/21/2017 12:57:07 PM>
+//  GPLEX input file <Runner.Language.analyzer.lex - 8/22/2017 4:50:46 PM>
 //  GPLEX frame file <embedded resource>
 //
 //  Option settings: verbose, parser, stack, minimize
@@ -781,6 +781,7 @@ int NextState() {
         // ============== The main tokenizer code =================
 
         int Scan() {
+            try {
                 for (; ; ) {
                     int next;              // next state to enter
 #if LEFTANCHORS
@@ -913,6 +914,12 @@ return (int)Token.DO;
 #endregion
                     }
                 }
+            } // end try
+            finally {
+// User-specified epilog to scan()
+yylloc = new QUT.Gppg.LexLocation(tokLin, tokCol, tokELin, tokECol);
+// End, user-specified epilog
+            } // end finally
         }
 
 #if BACKUP

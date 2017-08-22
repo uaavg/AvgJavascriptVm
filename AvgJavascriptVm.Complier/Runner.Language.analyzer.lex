@@ -35,4 +35,10 @@ Identifier      [a-z]+([a-z]|[0-9])*
 {Identifier}    { GetIdentifier(); return (int)Token.IDENTIFIER; }
 {Space}+		/* skip */
 
+
+%{
+  yylloc = new QUT.Gppg.LexLocation(tokLin, tokCol, tokELin, tokECol);
+%}
+
+
 %%

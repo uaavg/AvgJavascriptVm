@@ -12,6 +12,8 @@ namespace AvgJavascriptVm.Complier
 
         public StatementsAndDeclarations Result { get; private set; }
 
+        private ReturnNode LastReturnNode { get; set; }
+
         public RunnerParser(GlobalScope globalEnvironment) : base(null)
         {
             InitAliases();
@@ -24,6 +26,15 @@ namespace AvgJavascriptVm.Complier
             var stream = new MemoryStream(inputBuffer);
             Scanner = new RunnerScanner(stream);
             Parse();
+        }
+
+        private void CheckIfReturnInMain()
+        {                       
+            if (LastReturnNode != null)
+            {
+                ((RunnerScanner)Scanner).LogError("Unexpected return", LastReturnNode.Line, LastReturnNode.Column);                
+                YYAbort();
+            }            
         }
 
         private static void InitAliases()

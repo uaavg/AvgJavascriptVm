@@ -12,10 +12,9 @@ namespace AvgJavascriptVm.Complier
         {
             var sb = new StringBuilder();
             Console.SetOut(new StringWriter(sb));
-            var parser = new RunnerParser(new GlobalScope());
+            var parser = new RunnerParserWithLocation(new GlobalScope());
 
-   
-            parser.Parse("if(r) d ; else ;\r\nwhile(true) df(");
+            parser.Parse("function a(f, f, f){ return; }");
             parser.Result.ToString(new NodeStringBuilder());
         }
     }

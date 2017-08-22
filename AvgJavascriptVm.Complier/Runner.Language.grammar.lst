@@ -1,10 +1,10 @@
 
 // ==========================================================================
-//  GPPG error listing for yacc source file <Runner.Language.grammar.y - 8/21/2017 1:14:15 PM>
+//  GPPG error listing for yacc source file <Runner.Language.grammar.y - 8/22/2017 4:59:34 PM>
 // ==========================================================================
 //  Version:  1.5.2
 //  Machine:  TX-P-0038
-//  DateTime: 8/21/2017 1:14:15 PM
+//  DateTime: 8/22/2017 4:59:35 PM
 //  UserName: artem.glynskyi
 // ==========================================================================
 
@@ -28,17 +28,27 @@
 %token FUNCTION, IF, ELSE, WHILE, DO, FOR, RETURN
 %token SEMICOLON, COMMA,  LPARENTH, RPARENTH, LCURLYBRACE, RCURLYBRACE
 %token NUMBER, IDENTIFIER
+%token THEN
+
+%nonassoc THEN 
+%nonassoc ELSE
 
 %%
-// Error: NonTerminal symbol "function_decalration" has no productions
-// Warning: Terminating function_decalration fixes the following size-1 NonTerminal set
-   // {function_decalration}
-// Error: There are 1 non-terminating NonTerminal Symbols
-   //  {function_decalration}
-// ------------------------------------------------------------------------------------
 
-main : statements_and_declarations { Result = (StatementsAndDeclarations)$1.n; }
-     | /* empty */ { Result = new StatementsNode(); }
+%{
+// Error: Unknown %keyword in this context
+// ---------------------------------------
+  yylloc = new QUT.Gppg.LexLocation(tokLin, tokCol, tokELin, tokECol);
+//^^^^^^^^------------------------^^-------------------------------^^
+// Error: Syntax error, unexpected ident, expecting anchoredSymbol, or error
+// Error: This character is invalid in this context
+// Error: This character is invalid in this context
+// Error: This character is invalid in this context
+// -------------------------------------------------------------------------
+%}
+
+main : statements_and_declarations { CheckIfReturnInMain(); Result = (StatementsAndDeclarations)$1.n; }
+     | /* empty */ { Result = new StatementsAndDeclarations(); }
      ;
 
 statements_and_declarations : statement_or_declaration { var nodes = new StatementsAndDeclarations(); nodes.Nodes.Add($1.n); $$.n = nodes; }
@@ -46,19 +56,19 @@ statements_and_declarations : statement_or_declaration { var nodes = new Stateme
 							;
 
 statement_or_declaration : statement
-                         | function_decalration
+                         | function_declaration
 						 ;
 
 statements : statement { var stmts = new StatementsNode(); stmts.Statements.Add((StatementNode)$1.n); $$.n = stmts; }
            | statements statement { ((StatementsNode)$1.n).Statements.Add((StatementNode)$2.n); }
            ;
 
-statement : block { $$.n = $1.n; }
-          | function_declaration { $$.n = $1.n; }
-		  | while
-		  | dowhile
-		  | for		  		  
-		  | if
+statement : block { $$.n = $1.n; } 
+		  | while { $$.n = $1.n; }
+		  | dowhile { $$.n = $1.n; }
+		  | for { $$.n = $1.n; }
+		  | if { $$.n = $1.n; }
+		  | return { $$.n = $1.n; }
 	      ;
 
 expression: IDENTIFIER { $$.n = new IdentifierNode($1.str); }
@@ -69,27 +79,19 @@ block : LCURLYBRACE RCURLYBRACE { $$.n = new BlockNode((StatementsNode)$2.n); }
       ;
 
 statement_or_expression_or_semicolon: statement { $$.n = $1.n; } 
-                                    | expression { $$.n = $1.n; }
-								    | SEMICOLON { }
+                                    | expression SEMICOLON { $$.n = $1.n; }
+								    | SEMICOLON { $$.n = new EmptyExpression(); }
 					                ; 
  
-function_declaration : FUNCTION IDENTIFIER LPARENTH arguments_list RPARENTH function_body { $$.n = new FunctionDeclarationNode(new IdentifierNode($2.str), (ArgumentsListNode)$4.n, (BlockNode)$6.n); }
+function_declaration : FUNCTION IDENTIFIER LPARENTH arguments_list RPARENTH function_body { $$.n = new FunctionDeclarationNode(new IdentifierNode($2.str), (ArgumentsListNode)$4.n, (StatementsAndDeclarations)$6.n); LastReturnNode = null; }
                      ;
 
-function_body : LCURLYBRACE RCURLYBRACE { $$.n = new BlockNode((StatementsNode)$2.n); }
-              | LCURLYBRACE function_statements RCURLYBRACE { $$.n = new BlockNode((StatementsNode)$2.n); }
+function_body : LCURLYBRACE RCURLYBRACE { $$.n = new StatementsAndDeclarations(); }
+              | LCURLYBRACE statements_and_declarations RCURLYBRACE { $$.n = $2.n; }
               ;
 
-function_statements : function_statement { var stmts = new StatementsNode(); stmts.Statements.Add((StatementNode)$1.n); $$.n = stmts; }
-                    | function_statements function_statement { ((StatementsNode)$1.n).Statements.Add((StatementNode)$2.n); }
-					;
-
-function_statement: statement { $$.n = $1.n; }
-                  | return { $$.n = $1.n; }
-				  ;
-
-return: RETURN SEMICOLON { $$.n = new ReturnNode(); }
-      | RETURN expression SEMICOLON { $$.n = new ReturnNode((ExpressionNode)$2.n); }
+return: RETURN SEMICOLON { LastReturnNode = new ReturnNode(); $$.n = LastReturnNode; }
+      | RETURN expression SEMICOLON { LastReturnNode = new ReturnNode(); $$.n = LastReturnNode; }
                      ;
 
 arguments_list : IDENTIFIER { $$.n = new ArgumentsListNode(new IdentifierNode($1.str)); }
@@ -110,8 +112,8 @@ expression_or_empty : expression { $$.n = $1.n; }
                     | /* empty */ 
 					;
 
-if : IF LPARENTH expression RPARENTH statement_or_expression_or_semicolon
-   | IF LPARENTH expression RPARENTH statement_or_expression_or_semicolon ELSE statement_or_expression_or_semicolon
+if : IF LPARENTH expression RPARENTH statement_or_expression_or_semicolon %prec THEN { $$.n = new IfNode((ExpressionNode)$3.n, (StatementNode)$5.n); } 
+   | IF LPARENTH expression RPARENTH statement_or_expression_or_semicolon ELSE statement_or_expression_or_semicolon  { $$.n = new IfElseNode((ExpressionNode)$3.n, (StatementNode)$5.n, (StatementNode)$7.n); }
    ;
 		
 %%// ==========================================================================

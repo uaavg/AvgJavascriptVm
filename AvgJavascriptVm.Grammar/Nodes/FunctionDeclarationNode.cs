@@ -8,9 +8,9 @@ namespace AvgJavascriptVm.Grammar.Nodes
 
         public ArgumentsListNode Arguments { get; }
 
-        public BlockNode Body { get; }
+        public StatementsAndDeclarations Body { get; }
 
-        public FunctionDeclarationNode(IdentifierNode name, ArgumentsListNode arguments, BlockNode body)
+        public FunctionDeclarationNode(IdentifierNode name, ArgumentsListNode arguments, StatementsAndDeclarations body)
         {
             Name = name;
             Arguments = arguments;
@@ -21,8 +21,9 @@ namespace AvgJavascriptVm.Grammar.Nodes
         {
             strBuilder.Append($"function {Name}(");
             Arguments.ToString(strBuilder);
-            strBuilder.Append(")");
+            strBuilder.Append(") {");
             Body.ToString(strBuilder);            
+            strBuilder.Append("}");
         }
     }
 }

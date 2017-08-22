@@ -4,22 +4,22 @@
 // ==========================================================================
 //  Version:  1.2.2
 //  Machine:  TX-P-0038
-//  DateTime: 8/17/2017 5:32:25 PM
+//  DateTime: 8/22/2017 4:50:28 PM
 //  UserName: artem.glynskyi
 // ==========================================================================
 
 
 %namespace AvgJavascriptVm.Complier
+%using QUT.Gppg
 %scannertype RunnerScanner
+//^^^^^^^^^^
+// Error: Unexpected symbol, skipping to  <%%> 
+// Error: Parser error <Syntax error, unexpected scannertype, expecting ;, or .> 
+// ------------------------------------------------------------------------------
 %visibility internal
 %tokentype Token
-%using AvgJavascriptVm.Grammar
 
 %option stack, minimize, parser, verbose, persistbuffer, noembedbuffers 
-//^^^^^
-// Error: Unexpected symbol, skipping to  <%%> 
-// Error: Parser error <Syntax error, unexpected %option, expecting ;, or .> 
-// --------------------------------------------------------------------------
 
 Eol             (\r\n?|\n)
 Space           [ \t]
@@ -36,9 +36,11 @@ Identifier      [a-z]+([a-z]|[0-9])*
 
 "function"      { return (int)Token.FUNCTION; } 
 "if"            { return (int)Token.IF; }
+"else"          { return (int)Token.ELSE; }
 "while"         { return (int)Token.WHILE; }
 "do"            { return (int)Token.DO; }
 "for"           { return (int)Token.FOR; }
+"return"        { return (int)Token.RETURN; }
 ";"             { return (int)Token.SEMICOLON; }
 ","             { return (int)Token.COMMA; }
 "("             { return (int)Token.LPARENTH; }
@@ -57,6 +59,12 @@ Identifier      [a-z]+([a-z]|[0-9])*
 //^^^^
 // Error: Unknown lexical category <Space> 
 // ----------------------------------------
+
+
+%{
+  yylloc = new LexLocation(tokLin, tokCol, tokELin, tokECol);
+%}
+
 
 %%// ==========================================================================
 

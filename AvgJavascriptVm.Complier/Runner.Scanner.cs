@@ -17,7 +17,12 @@ namespace AvgJavascriptVm.Complier
 		public override void yyerror(string format, params object[] args)
 		{
             base.yyerror(format, args);
-			Console.WriteLine($"Line: {yyline} Column: {yycol} {string.Format(format, args)}");			
+			LogError(string.Format(format, args), yyline, yycol);			
 		}
+
+        public void LogError(string message, int line, int col)
+        {
+            Console.WriteLine($"Line: {line} Column: {col} {message}");
+        }
     }
 }

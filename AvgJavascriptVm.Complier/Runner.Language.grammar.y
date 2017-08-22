@@ -24,7 +24,7 @@
 
 %%
 
-main : statements_and_declarations { Result = (StatementsAndDeclarations)$1.n; }
+main : statements_and_declarations { CheckIfReturnInMain(); Result = (StatementsAndDeclarations)$1.n; }
      | /* empty */ { Result = new StatementsAndDeclarations(); }
      ;
 
@@ -40,11 +40,12 @@ statements : statement { var stmts = new StatementsNode(); stmts.Statements.Add(
            | statements statement { ((StatementsNode)$1.n).Statements.Add((StatementNode)$2.n); }
            ;
 
-statement : block { $$.n = $1.n; }          
-		  | while
-		  | dowhile
-		  | for		  		  
-		  | if
+statement : block { $$.n = $1.n; } 
+		  | while { $$.n = $1.n; }
+		  | dowhile { $$.n = $1.n; }
+		  | for { $$.n = $1.n; }
+		  | if { $$.n = $1.n; }
+		  | return { $$.n = $1.n; }
 	      ;
 
 expression: IDENTIFIER { $$.n = new IdentifierNode($1.str); }
@@ -59,23 +60,15 @@ statement_or_expression_or_semicolon: statement { $$.n = $1.n; }
 								    | SEMICOLON { $$.n = new EmptyExpression(); }
 					                ; 
  
-function_declaration : FUNCTION IDENTIFIER LPARENTH arguments_list RPARENTH function_body { $$.n = new FunctionDeclarationNode(new IdentifierNode($2.str), (ArgumentsListNode)$4.n, (BlockNode)$6.n); }
+function_declaration : FUNCTION IDENTIFIER LPARENTH arguments_list RPARENTH function_body { $$.n = new FunctionDeclarationNode(new IdentifierNode($2.str), (ArgumentsListNode)$4.n, (StatementsAndDeclarations)$6.n); LastReturnNode = null; }
                      ;
 
-function_body : LCURLYBRACE RCURLYBRACE { $$.n = new BlockNode((StatementsNode)$2.n); }
-              | LCURLYBRACE function_statements RCURLYBRACE { $$.n = new BlockNode((StatementsNode)$2.n); }
+function_body : LCURLYBRACE RCURLYBRACE { $$.n = new StatementsAndDeclarations(); }
+              | LCURLYBRACE statements_and_declarations RCURLYBRACE { $$.n = $2.n; }
               ;
 
-function_statements : function_statement { var stmts = new StatementsNode(); stmts.Statements.Add((StatementNode)$1.n); $$.n = stmts; }
-                    | function_statements function_statement { ((StatementsNode)$1.n).Statements.Add((StatementNode)$2.n); }
-					;
-
-function_statement: statement { $$.n = $1.n; }
-                  | return { $$.n = $1.n; }
-				  ;
-
-return: RETURN SEMICOLON { $$.n = new ReturnNode(); }
-      | RETURN expression SEMICOLON { $$.n = new ReturnNode((ExpressionNode)$2.n); }
+return: RETURN SEMICOLON { LastReturnNode = new ReturnNode(); $$.n = LastReturnNode; }
+      | RETURN expression SEMICOLON { LastReturnNode = new ReturnNode(); $$.n = LastReturnNode; }
                      ;
 
 arguments_list : IDENTIFIER { $$.n = new ArgumentsListNode(new IdentifierNode($1.str)); }
