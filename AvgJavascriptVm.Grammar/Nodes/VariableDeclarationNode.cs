@@ -23,6 +23,7 @@ namespace AvgJavascriptVm.Grammar.Nodes
                     strBuilder.Append(", ");
                 }
             }
+            strBuilder.Append(";");
         }
     }
 }

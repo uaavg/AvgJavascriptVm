@@ -14,7 +14,7 @@ namespace AvgJavascriptVm.Complier
             Console.SetOut(new StringWriter(sb));
             var parser = new RunnerParserWithLocation(new GlobalScope());
 
-            parser.Parse("var a = \"\\uD842\\uDFB7\"; ");
+            parser.Parse("function test(a, b) { var a = 3434; } ");
             parser.Result.ToString(new NodeStringBuilder());
         }
     }

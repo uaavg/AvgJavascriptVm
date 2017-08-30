@@ -37,12 +37,12 @@ Identifier      [a-z]+([a-z]|[0-9])*
 "="             { return (int)Token.ASSIGN; }
 {Number}		{ GetNumber(); return (int)Token.NUMBER; }
 {Identifier}    { GetIdentifier(); return (int)Token.IDENTIFIER; }
-//{Space}+		/* skip */
+{Space}+		/* skip */
 
 /* Begin string */
 (\"|\')                                            { BeginString(); }
 <STRING>(\"|\')                                    { if(AppendString()) return (int)Token.STRING; }
-<STRING>\\[b|t|n|v|f|f|r|\"|\'|\\] { AppendStringEscapedSymbol(); }
+<STRING>\\[b|t|n|v|f|f|r|\"|\'|\\]                 { AppendStringEscapedSymbol(); }
 <STRING>\\u([0-9a-fA-F]){4}                        { AppendStringUnicodeSymbol(); }
 <STRING>[\r|\n|\v]                                 { throw new ApplicationException("Inside string cannot contains end of line"); }
 <STRING>[^(\r\n?|\n)|\"|\'|\\]*                    { AppendString(); }       
