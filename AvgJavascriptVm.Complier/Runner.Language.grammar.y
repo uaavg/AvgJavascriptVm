@@ -61,10 +61,9 @@ block : LCURLYBRACE RCURLYBRACE { $$.n = new BlockNode((StatementsNode)$2.n); }
       | LCURLYBRACE statements RCURLYBRACE { $$.n = new BlockNode((StatementsNode)$2.n); }
       ;
 
-statement_or_expression_or_semicolon: statement { $$.n = $1.n; } 
-                                    | expression SEMICOLON { $$.n = $1.n; }
-								    | SEMICOLON { $$.n = new EmptyExpression(); }
-					                ; 
+statement_or_semicolon : statement { $$.n = $1.n; } 
+                       | SEMICOLON { $$.n = new EmptyExpression(); }
+					   ; 
  
 function_declaration : FUNCTION IDENTIFIER LPARENTH arguments_list RPARENTH function_body { $$.n = new FunctionDeclarationNode(new IdentifierNode($2.str), (ArgumentsListNode)$4.n, (StatementsAndDeclarations)$6.n); LastReturnNode = null; }
                      ;
@@ -82,21 +81,21 @@ arguments_list : IDENTIFIER { $$.n = new ArgumentsListNode(new IdentifierNode($1
 			   | /* empty */ { $$.n = new ArgumentsListNode(); }
                ;
 
-while : WHILE LPARENTH expression RPARENTH statement_or_expression_or_semicolon { $$.n = new WhileNode((ExpressionNode)$3.n, (StatementNode)$5.n); }      
+while : WHILE LPARENTH expression RPARENTH statement_or_semicolon { $$.n = new WhileNode((ExpressionNode)$3.n, (StatementNode)$5.n); }      
 	  ;
 
 dowhile : DO block WHILE LPARENTH expression RPARENTH SEMICOLON { $$.n = new DoWhileNode((ExpressionNode)$5.n, (StatementNode)$2.n); }
         ;
 
-for : FOR LPARENTH expression_or_empty SEMICOLON expression_or_empty SEMICOLON expression_or_empty RPARENTH statement_or_expression_or_semicolon { $$.n = new ForNode((StatementNode)$3.n, (StatementNode)$5.n, (StatementNode)$7.n, (StatementNode)$9.n); }    
+for : FOR LPARENTH expression_or_empty SEMICOLON expression_or_empty SEMICOLON expression_or_empty RPARENTH statement_or_semicolon { $$.n = new ForNode((StatementNode)$3.n, (StatementNode)$5.n, (StatementNode)$7.n, (StatementNode)$9.n); }    
 	;
 
 expression_or_empty : expression { $$.n = $1.n; }
                     | /* empty */ 
 					;
 
-if : IF LPARENTH expression RPARENTH statement_or_expression_or_semicolon %prec THEN { $$.n = new IfNode((ExpressionNode)$3.n, (StatementNode)$5.n); } 
-   | IF LPARENTH expression RPARENTH statement_or_expression_or_semicolon ELSE statement_or_expression_or_semicolon  { $$.n = new IfElseNode((ExpressionNode)$3.n, (StatementNode)$5.n, (StatementNode)$7.n); }
+if : IF LPARENTH expression RPARENTH statement_or_semicolon %prec THEN { $$.n = new IfNode((ExpressionNode)$3.n, (StatementNode)$5.n); } 
+   | IF LPARENTH expression RPARENTH statement_or_semicolon ELSE statement_or_semicolon  { $$.n = new IfElseNode((ExpressionNode)$3.n, (StatementNode)$5.n, (StatementNode)$7.n); }
    ;
 
 variable_declaration : VAR variable_declaration_identifier { $$.n = new VariableDeclarationNode((VariableDeclarationIdentifierNode)$2.n); }
