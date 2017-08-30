@@ -15,7 +15,7 @@
 %start main
 
 %token FUNCTION, IF, ELSE, WHILE, DO, FOR, RETURN, VAR, TRUE, FALSE
-%token SEMICOLON, COMMA,  LPARENTH, RPARENTH, LCURLYBRACE, RCURLYBRACE, ASSIGN
+%token SEMICOLON, COMMA,  LPARENTH, RPARENTH, LCURLYBRACE, RCURLYBRACE, ASSIGN, LBRACKET, RBRACKET
 %token NUMBER, IDENTIFIER, STRING
 %token THEN
 
@@ -54,6 +54,7 @@ expression : IDENTIFIER { $$.n = new IdentifierNode($1.str); }
            | NUMBER { $$.n = new NumberNode($1.num); }
 		   | STRING { $$.n = new StringNode($1.str); }
 		   | boolean { $$.n = $1.n; }
+		   | array { $$.n = $1.n; }
            ;
 
 block : LCURLYBRACE RCURLYBRACE { $$.n = new BlockNode((StatementsNode)$2.n); } 
@@ -109,5 +110,13 @@ variable_declaration_identifier : IDENTIFIER { $$.n = new VariableDeclarationIde
 boolean : TRUE { $$.n = new BooleanNode(true); }
         | FALSE { $$.n = new BooleanNode(false); }
 		;
+
+array : LBRACKET array_list RBRACKET { $$.n = $2.n; }
+      | LBRACKET RBRACKET { $$.n = new ArrayNode(); }
+	  ;
+
+array_list : expression { var arr = new ArrayNode(); arr.Values.Add((ExpressionNode)$1.n); $$.n = arr; }
+           | array_list COMMA expression { var arr = (ArrayNode)$1.n; arr.Values.Add((ExpressionNode)$3.n); $$.n = arr; }
+		   ;
 		
 %%

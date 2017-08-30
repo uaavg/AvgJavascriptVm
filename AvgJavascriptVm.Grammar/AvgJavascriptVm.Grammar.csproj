@@ -46,6 +46,7 @@
     <Compile Include="Helpers\NodeStringBuilder.cs" />
     <Compile Include="Infrastructure\JsCompiledFunction.cs" />
     <Compile Include="Nodes\ArgumentsListNode.cs" />
+    <Compile Include="Nodes\ArrayNode.cs" />
     <Compile Include="Nodes\BlockNode.cs" />
     <Compile Include="Nodes\BooleanNode.cs" />
     <Compile Include="Nodes\DoWhileNode.cs" />
