@@ -47,6 +47,7 @@
     <Compile Include="Infrastructure\JsCompiledFunction.cs" />
     <Compile Include="Nodes\ArgumentsListNode.cs" />
     <Compile Include="Nodes\BlockNode.cs" />
+    <Compile Include="Nodes\BooleanNode.cs" />
     <Compile Include="Nodes\DoWhileNode.cs" />
     <Compile Include="Nodes\EmptyExpression.cs" />
     <Compile Include="Nodes\ExpressionNode.cs" />

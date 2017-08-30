@@ -14,7 +14,7 @@
 
 %start main
 
-%token FUNCTION, IF, ELSE, WHILE, DO, FOR, RETURN, VAR
+%token FUNCTION, IF, ELSE, WHILE, DO, FOR, RETURN, VAR, TRUE, FALSE
 %token SEMICOLON, COMMA,  LPARENTH, RPARENTH, LCURLYBRACE, RCURLYBRACE, ASSIGN
 %token NUMBER, IDENTIFIER, STRING
 %token THEN
@@ -47,12 +47,13 @@ statement : block { $$.n = $1.n; }
 		  | if { $$.n = $1.n; }
 		  | return { $$.n = $1.n; }
 		  | variable_declaration SEMICOLON { $$.n = $1.n; }
-		  | expression SEMICOLON
+		  | expression SEMICOLON { $$.n = $1.n;}
 	      ;
 
 expression : IDENTIFIER { $$.n = new IdentifierNode($1.str); }
            | NUMBER { $$.n = new NumberNode($1.num); }
 		   | STRING { $$.n = new StringNode($1.str); }
+		   | boolean { $$.n = $1.n; }
            ;
 
 block : LCURLYBRACE RCURLYBRACE { $$.n = new BlockNode((StatementsNode)$2.n); } 
@@ -105,5 +106,8 @@ variable_declaration_identifier : IDENTIFIER { $$.n = new VariableDeclarationIde
                                 | IDENTIFIER ASSIGN expression { $$.n = new VariableDeclarationIdentifierNode($1.str, (ExpressionNode)$3.n); }
 					            ;
 
+boolean : TRUE { $$.n = new BooleanNode(true); }
+        | FALSE { $$.n = new BooleanNode(false); }
+		;
 		
 %%

@@ -28,6 +28,8 @@ Identifier      [a-z]+([a-z]|[0-9])*
 "for"           { return (int)Token.FOR; }
 "return"        { return (int)Token.RETURN; }
 "var"           { return (int)Token.VAR; }
+"true"          { return (int)Token.TRUE; }
+"false"         { return (int)Token.TRUE; }
 ";"             { return (int)Token.SEMICOLON; }
 ","             { return (int)Token.COMMA; }
 "("             { return (int)Token.LPARENTH; }
