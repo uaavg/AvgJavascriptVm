@@ -14,9 +14,9 @@
 
 %start main
 
-%token FUNCTION, IF, ELSE, WHILE, DO, FOR, RETURN
-%token SEMICOLON, COMMA,  LPARENTH, RPARENTH, LCURLYBRACE, RCURLYBRACE
-%token NUMBER, IDENTIFIER
+%token FUNCTION, IF, ELSE, WHILE, DO, FOR, RETURN, VAR
+%token SEMICOLON, COMMA,  LPARENTH, RPARENTH, LCURLYBRACE, RCURLYBRACE, ASSIGN
+%token NUMBER, IDENTIFIER, STRING
 %token THEN
 
 %nonassoc THEN 
@@ -24,12 +24,12 @@
 
 %%
 
-main : statements_and_declarations { CheckIfReturnInMain(); Result = (StatementsAndDeclarations)$1.n; }
-     | /* empty */ { Result = new StatementsAndDeclarations(); }
+main : statements_and_declarations { CheckIfReturnInMain(); Result = (StatementsAndDeclarations)$1.n; $$.n = Result; }
+     | /* empty */ { Result = new StatementsAndDeclarations(); $$.n = Result; }
      ;
 
 statements_and_declarations : statement_or_declaration { var nodes = new StatementsAndDeclarations(); nodes.Nodes.Add($1.n); $$.n = nodes; }
-                            | statements_and_declarations statement_or_declaration { ((StatementsAndDeclarations)$1.n).Nodes.Add($2.n); }
+                            | statements_and_declarations statement_or_declaration { var nodes = ((StatementsAndDeclarations)$1.n); nodes.Nodes.Add($2.n);  $$.n = nodes;}
 							;
 
 statement_or_declaration : statement
@@ -46,10 +46,14 @@ statement : block { $$.n = $1.n; }
 		  | for { $$.n = $1.n; }
 		  | if { $$.n = $1.n; }
 		  | return { $$.n = $1.n; }
+		  | variable_declaration SEMICOLON { $$.n = $1.n; }
+		  | expression SEMICOLON
 	      ;
 
-expression: IDENTIFIER { $$.n = new IdentifierNode($1.str); }
-          ;
+expression : IDENTIFIER { $$.n = new IdentifierNode($1.str); }
+           | NUMBER { $$.n = new NumberNode($1.num); }
+		   | STRING { $$.n = new StringNode($1.str); }
+           ;
 
 block : LCURLYBRACE RCURLYBRACE { $$.n = new BlockNode((StatementsNode)$2.n); } 
       | LCURLYBRACE statements RCURLYBRACE { $$.n = new BlockNode((StatementsNode)$2.n); }
@@ -92,5 +96,14 @@ expression_or_empty : expression { $$.n = $1.n; }
 if : IF LPARENTH expression RPARENTH statement_or_expression_or_semicolon %prec THEN { $$.n = new IfNode((ExpressionNode)$3.n, (StatementNode)$5.n); } 
    | IF LPARENTH expression RPARENTH statement_or_expression_or_semicolon ELSE statement_or_expression_or_semicolon  { $$.n = new IfElseNode((ExpressionNode)$3.n, (StatementNode)$5.n, (StatementNode)$7.n); }
    ;
+
+variable_declaration : VAR variable_declaration_identifier { $$.n = new VariableDeclarationNode((VariableDeclarationIdentifierNode)$2.n); }
+                     | variable_declaration COMMA variable_declaration_identifier { var nodes = ((VariableDeclarationNode)$1.n); nodes.Declarations.Add((VariableDeclarationIdentifierNode)$3.n); $$.n = nodes; }
+					 ;
+
+variable_declaration_identifier : IDENTIFIER { $$.n = new VariableDeclarationIdentifierNode($1.str); }
+                                | IDENTIFIER ASSIGN expression { $$.n = new VariableDeclarationIdentifierNode($1.str, (ExpressionNode)$3.n); }
+					            ;
+
 		
 %%

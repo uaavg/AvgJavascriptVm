@@ -12,7 +12,8 @@ namespace AvgJavascriptVm.Complier
         protected override void DoAction(int action)
         {
             base.DoAction(action);
-            CurrentSemanticValue.n.SetLocation(CurrentLocationSpan.StartLine, CurrentLocationSpan.StartColumn);
+            
+            CurrentSemanticValue.n?.SetLocation(CurrentLocationSpan.StartLine, CurrentLocationSpan.StartColumn);
         }
     }
 }
