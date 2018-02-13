@@ -1,10 +1,10 @@
 
 // ==========================================================================
-//  GPPG error listing for yacc source file <Runner.Language.grammar.y - 8/30/2017 6:53:03 PM>
+//  GPPG error listing for yacc source file <Runner.Language.grammar.y - 2/13/2018 5:25:07 PM>
 // ==========================================================================
 //  Version:  1.5.2
 //  Machine:  TX-P-0038
-//  DateTime: 8/30/2017 6:53:04 PM
+//  DateTime: 2/13/2018 5:25:09 PM
 //  UserName: artem.glynskyi
 // ==========================================================================
 
@@ -21,12 +21,13 @@
 			public double num;
             public string str;
 			public Node n;
+			public object add;
 	   }
 
 %start main
 
 %token FUNCTION, IF, ELSE, WHILE, DO, FOR, RETURN, VAR, TRUE, FALSE
-%token SEMICOLON, COMMA,  LPARENTH, RPARENTH, LCURLYBRACE, RCURLYBRACE, ASSIGN, LBRACKET, RBRACKET
+%token SEMICOLON, COMMA,  LPARENTH, RPARENTH, LCURLYBRACE, RCURLYBRACE, ASSIGN, LBRACKET, RBRACKET, COLON
 %token NUMBER, IDENTIFIER, STRING
 %token THEN
 
@@ -34,9 +35,12 @@
 %nonassoc ELSE
 
 %%
-// Warning: NonTerminal symbol "array_list" is unreachable
-// Warning: NonTerminal symbol "array" is unreachable
-// -------------------------------------------------------
+// Error: NonTerminal symbol "string" has no productions
+// Warning: Terminating string fixes the following size-1 NonTerminal set
+   // {string}
+// Error: There are 1 non-terminating NonTerminal Symbols
+   //  {string}
+// ----------------------------------------------------------------------
 
 main : statements_and_declarations { CheckIfReturnInMain(); Result = (StatementsAndDeclarations)$1.n; $$.n = Result; }
      | /* empty */ { Result = new StatementsAndDeclarations(); $$.n = Result; }
@@ -68,16 +72,17 @@ expression : IDENTIFIER { $$.n = new IdentifierNode($1.str); }
            | NUMBER { $$.n = new NumberNode($1.num); }
 		   | STRING { $$.n = new StringNode($1.str); }
 		   | boolean { $$.n = $1.n; }
+		   | array { $$.n = $1.n; }
+		   | object { $$.n = $1.n; }
            ;
 
 block : LCURLYBRACE RCURLYBRACE { $$.n = new BlockNode((StatementsNode)$2.n); } 
       | LCURLYBRACE statements RCURLYBRACE { $$.n = new BlockNode((StatementsNode)$2.n); }
       ;
 
-statement_or_expression_or_semicolon: statement { $$.n = $1.n; } 
-                                    | expression SEMICOLON { $$.n = $1.n; }
-								    | SEMICOLON { $$.n = new EmptyExpression(); }
-					                ; 
+statement_or_semicolon : statement { $$.n = $1.n; } 
+                       | SEMICOLON { $$.n = new EmptyExpression(); }
+					   ; 
  
 function_declaration : FUNCTION IDENTIFIER LPARENTH arguments_list RPARENTH function_body { $$.n = new FunctionDeclarationNode(new IdentifierNode($2.str), (ArgumentsListNode)$4.n, (StatementsAndDeclarations)$6.n); LastReturnNode = null; }
                      ;
@@ -95,21 +100,21 @@ arguments_list : IDENTIFIER { $$.n = new ArgumentsListNode(new IdentifierNode($1
 			   | /* empty */ { $$.n = new ArgumentsListNode(); }
                ;
 
-while : WHILE LPARENTH expression RPARENTH statement_or_expression_or_semicolon { $$.n = new WhileNode((ExpressionNode)$3.n, (StatementNode)$5.n); }      
+while : WHILE LPARENTH expression RPARENTH statement_or_semicolon { $$.n = new WhileNode((ExpressionNode)$3.n, (StatementNode)$5.n); }      
 	  ;
 
 dowhile : DO block WHILE LPARENTH expression RPARENTH SEMICOLON { $$.n = new DoWhileNode((ExpressionNode)$5.n, (StatementNode)$2.n); }
         ;
 
-for : FOR LPARENTH expression_or_empty SEMICOLON expression_or_empty SEMICOLON expression_or_empty RPARENTH statement_or_expression_or_semicolon { $$.n = new ForNode((StatementNode)$3.n, (StatementNode)$5.n, (StatementNode)$7.n, (StatementNode)$9.n); }    
+for : FOR LPARENTH expression_or_empty SEMICOLON expression_or_empty SEMICOLON expression_or_empty RPARENTH statement_or_semicolon { $$.n = new ForNode((StatementNode)$3.n, (StatementNode)$5.n, (StatementNode)$7.n, (StatementNode)$9.n); }    
 	;
 
 expression_or_empty : expression { $$.n = $1.n; }
                     | /* empty */ 
 					;
 
-if : IF LPARENTH expression RPARENTH statement_or_expression_or_semicolon %prec THEN { $$.n = new IfNode((ExpressionNode)$3.n, (StatementNode)$5.n); } 
-   | IF LPARENTH expression RPARENTH statement_or_expression_or_semicolon ELSE statement_or_expression_or_semicolon  { $$.n = new IfElseNode((ExpressionNode)$3.n, (StatementNode)$5.n, (StatementNode)$7.n); }
+if : IF LPARENTH expression RPARENTH statement_or_semicolon %prec THEN { $$.n = new IfNode((ExpressionNode)$3.n, (StatementNode)$5.n); } 
+   | IF LPARENTH expression RPARENTH statement_or_semicolon ELSE statement_or_semicolon  { $$.n = new IfElseNode((ExpressionNode)$3.n, (StatementNode)$5.n, (StatementNode)$7.n); }
    ;
 
 variable_declaration : VAR variable_declaration_identifier { $$.n = new VariableDeclarationNode((VariableDeclarationIdentifierNode)$2.n); }
@@ -131,6 +136,20 @@ array : LBRACKET array_list RBRACKET { $$.n = $2.n; }
 array_list : expression { var arr = new ArrayNode(); arr.Values.Add((ExpressionNode)$1.n); $$.n = arr; }
            | array_list COMMA expression { var arr = (ArrayNode)$1.n; arr.Values.Add((ExpressionNode)$3.n); $$.n = arr; }
 		   ;
-		
+
+object : LBRACKET object_properties_list RBRACKET { $$.n = new ObjectNode((List<ObjectPropertyNode>)$2.add); }
+       ;
+
+object_properties_list : object_property { var l = new List<ObjectPropertyNode>(); l.Add((ObjectPropertyNode)$1.n); $$.add = l; }
+                       | object_property COMMA object_properties_list { var l = (List<ObjectPropertyNode>)$3.add; l.Add((ObjectPropertyNode)$1.n); $$.add = l; }
+					   ;
+
+object_property : object_property_identifier COLON expression { $$.n = new ObjectPropertyNode($1.n, $3.n); }
+                ;
+
+object_property_identifier : IDENTIFIER { $$.n = new ObjectPropertyIdentifierNode($$.n); }
+                           | string { $$.n = new ObjectPropertyIdentifierNode($$.n); }
+                           ;  
+						   
 %%// ==========================================================================
 

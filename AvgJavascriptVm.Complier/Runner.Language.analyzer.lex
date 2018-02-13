@@ -1,4 +1,4 @@
-%namespace AvgJavascriptVm.Complier
+﻿%namespace AvgJavascriptVm.Complier
 %scannertype RunnerScanner
 %visibility internal
 %tokentype Token
@@ -39,6 +39,7 @@ Identifier      [a-z]+([a-z]|[0-9])*
 "["             { return (int)Token.LBRACKET; }
 "]"             { return (int)Token.RBRACKET; }
 "="             { return (int)Token.ASSIGN; }
+":"             { return (int)Token.COLON; }
 {Number}		{ GetNumber(); return (int)Token.NUMBER; }
 {Identifier}    { GetIdentifier(); return (int)Token.IDENTIFIER; }
 {Space}+		/* skip */

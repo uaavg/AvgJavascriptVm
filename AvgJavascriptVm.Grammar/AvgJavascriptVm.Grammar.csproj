@@ -59,6 +59,9 @@
     <Compile Include="Nodes\IfNode.cs" />
     <Compile Include="Nodes\Node.cs" />
     <Compile Include="Nodes\NumberNode.cs" />
+    <Compile Include="Nodes\ObjectNode.cs" />
+    <Compile Include="Nodes\ObjectPropertyIdentifierNode.cs" />
+    <Compile Include="Nodes\ObjectPropertyNode.cs" />
     <Compile Include="Nodes\StatementsAndDeclarations.cs" />
     <Compile Include="Nodes\ReturnNode.cs" />
     <Compile Include="Nodes\StatementNode.cs" />

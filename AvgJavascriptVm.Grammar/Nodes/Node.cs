@@ -1,4 +1,5 @@
 ﻿using AvgJavascriptVm.Grammar.Helpers;
+// ReSharper disable UnusedMember.Local
 
 namespace AvgJavascriptVm.Grammar.Nodes
 {
@@ -12,7 +13,7 @@ namespace AvgJavascriptVm.Grammar.Nodes
 
         public override string ToString()
         {
-            var strBuilder = new NodeStringBuilder();            
+            var strBuilder = new NodeStringBuilder();
 
             ToString(strBuilder);
             return strBuilder.ToString();
@@ -24,10 +25,11 @@ namespace AvgJavascriptVm.Grammar.Nodes
             {
                 Line = line;
                 Column = column;
-            }            
+            }
         }
 
-        // ReSharper disable once UnusedMember.Local
-        private string DebugView => ToString();        
+        private string NodeType => GetType().Name;
+
+        private string DebugView => ToString();
     }
 }

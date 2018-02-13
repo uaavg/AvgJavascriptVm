@@ -10,12 +10,13 @@
 			public double num;
             public string str;
 			public Node n;
+			public object add;
 	   }
 
 %start main
 
 %token FUNCTION, IF, ELSE, WHILE, DO, FOR, RETURN, VAR, TRUE, FALSE
-%token SEMICOLON, COMMA,  LPARENTH, RPARENTH, LCURLYBRACE, RCURLYBRACE, ASSIGN, LBRACKET, RBRACKET
+%token SEMICOLON, COMMA,  LPARENTH, RPARENTH, LCURLYBRACE, RCURLYBRACE, ASSIGN, LBRACKET, RBRACKET, COLON
 %token NUMBER, IDENTIFIER, STRING
 %token THEN
 
@@ -55,6 +56,7 @@ expression : IDENTIFIER { $$.n = new IdentifierNode($1.str); }
 		   | STRING { $$.n = new StringNode($1.str); }
 		   | boolean { $$.n = $1.n; }
 		   | array { $$.n = $1.n; }
+		   | object { $$.n = $1.n; }
            ;
 
 block : LCURLYBRACE RCURLYBRACE { $$.n = new BlockNode((StatementsNode)$2.n); } 
@@ -117,5 +119,19 @@ array : LBRACKET array_list RBRACKET { $$.n = $2.n; }
 array_list : expression { var arr = new ArrayNode(); arr.Values.Add((ExpressionNode)$1.n); $$.n = arr; }
            | array_list COMMA expression { var arr = (ArrayNode)$1.n; arr.Values.Add((ExpressionNode)$3.n); $$.n = arr; }
 		   ;
-		
+
+object : LCURLYBRACE object_properties_list RCURLYBRACE { $$.n = new ObjectNode((List<ObjectPropertyNode>)$2.add); }
+       ;
+
+object_properties_list : object_property { var l = new List<ObjectPropertyNode>(); l.Add((ObjectPropertyNode)$1.n); $$.add = l; }
+                       | object_property COMMA object_properties_list { var l = (List<ObjectPropertyNode>)$3.add; l.Add((ObjectPropertyNode)$1.n); $$.add = l; }
+					   ;
+
+object_property : object_property_identifier COLON expression { $$.n = new ObjectPropertyNode((ObjectPropertyIdentifierNode)$1.n, (ExpressionNode)$3.n); }
+                ;
+
+object_property_identifier : IDENTIFIER { $$.n = new ObjectPropertyIdentifierNode(new IdentifierNode($1.str)); }
+                           | STRING { $$.n = new ObjectPropertyIdentifierNode(new StringNode($1.str)); }
+                           ;
+						   
 %%
