@@ -8,7 +8,7 @@
 Eol             (\r\n?|\n)
 Space           [ \t]
 Number          [0-9]+(\.[0-9]+)?
-Identifier      [a-z]+([a-z]|[0-9])*
+Identifier      [a-zA-Z]+([a-zA-Z]|[0-9])*
 
 %x STRING
 
@@ -32,6 +32,7 @@ Identifier      [a-z]+([a-z]|[0-9])*
 "false"         { return (int)Token.TRUE; }
 ";"             { return (int)Token.SEMICOLON; }
 ","             { return (int)Token.COMMA; }
+"."             { return (int)Token.DOT; }
 "("             { return (int)Token.LPARENTH; }
 ")"             { return (int)Token.RPARENTH; }
 "{"             { return (int)Token.LCURLYBRACE; }

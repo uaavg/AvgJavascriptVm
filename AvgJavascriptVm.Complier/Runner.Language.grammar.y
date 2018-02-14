@@ -16,7 +16,7 @@
 %start main
 
 %token FUNCTION, IF, ELSE, WHILE, DO, FOR, RETURN, VAR, TRUE, FALSE
-%token SEMICOLON, COMMA,  LPARENTH, RPARENTH, LCURLYBRACE, RCURLYBRACE, ASSIGN, LBRACKET, RBRACKET, COLON
+%token SEMICOLON, DOT, COMMA,  LPARENTH, RPARENTH, LCURLYBRACE, RCURLYBRACE, ASSIGN, LBRACKET, RBRACKET, COLON
 %token NUMBER, IDENTIFIER, STRING
 %token THEN
 
@@ -48,16 +48,28 @@ statement : block { $$.n = $1.n; }
 		  | if { $$.n = $1.n; }
 		  | return { $$.n = $1.n; }
 		  | variable_declaration SEMICOLON { $$.n = $1.n; }
-		  | expression SEMICOLON { $$.n = $1.n;}
+		  | statement_expression SEMICOLON { $$.n = $1.n;}
 	      ;
 
-expression : IDENTIFIER { $$.n = new IdentifierNode($1.str); }
-           | NUMBER { $$.n = new NumberNode($1.num); }
-		   | STRING { $$.n = new StringNode($1.str); }
-		   | boolean { $$.n = $1.n; }
-		   | array { $$.n = $1.n; }
-		   | object { $$.n = $1.n; }
+expression : statement_expression { $$.n = $1.n; }
+           | function_expression { $$.n = $1.n; }
+		   | function_named_expression { $$.n = $1.n; }
            ;
+
+statement_expression : statement_expression_no_property_getter { $$.n = $1.n; }
+					 | property_getter { $$.n = $1.n; }
+					 | LPARENTH expression RPARENTH { $$.n = $2.n; }
+					 ;
+
+statement_expression_no_property_getter : IDENTIFIER { $$.n = new IdentifierNode($1.str); }
+										| NUMBER { $$.n = new NumberNode($1.num); }
+										| STRING { $$.n = new StringNode($1.str); }
+										| boolean { $$.n = $1.n; }
+										| array { $$.n = $1.n; }
+										| object { $$.n = $1.n; }
+										| function_invocation { $$.n = $1.n; }	
+										| indexer_getter { $$.n = $1.n; }
+										;
 
 block : LCURLYBRACE RCURLYBRACE { $$.n = new BlockNode((StatementsNode)$2.n); } 
       | LCURLYBRACE statements RCURLYBRACE { $$.n = new BlockNode((StatementsNode)$2.n); }
@@ -69,6 +81,13 @@ statement_or_semicolon : statement { $$.n = $1.n; }
  
 function_declaration : FUNCTION IDENTIFIER LPARENTH arguments_list RPARENTH function_body { $$.n = new FunctionDeclarationNode(new IdentifierNode($2.str), (ArgumentsListNode)$4.n, (StatementsAndDeclarations)$6.n); LastReturnNode = null; }
                      ;
+
+function_expression : FUNCTION LPARENTH arguments_list RPARENTH function_body { $$.n = new FunctionExpressionNode((ArgumentsListNode)$3.n, (StatementsAndDeclarations)$5.n); LastReturnNode = null; }
+					;
+
+function_named_expression : FUNCTION IDENTIFIER LPARENTH arguments_list RPARENTH function_body {$$.n = new FunctionNamedExpressionNode(new IdentifierNode($2.str), (ArgumentsListNode)$4.n, (StatementsAndDeclarations)$6.n); LastReturnNode = null; }
+					;
+
 
 function_body : LCURLYBRACE RCURLYBRACE { $$.n = new StatementsAndDeclarations(); }
               | LCURLYBRACE statements_and_declarations RCURLYBRACE { $$.n = $2.n; }
@@ -133,5 +152,21 @@ object_property : object_property_identifier COLON expression { $$.n = new Objec
 object_property_identifier : IDENTIFIER { $$.n = new ObjectPropertyIdentifierNode(new IdentifierNode($1.str)); }
                            | STRING { $$.n = new ObjectPropertyIdentifierNode(new StringNode($1.str)); }
                            ;
-						   
+
+function_invocation : statement_expression_no_property_getter LPARENTH function_invocation_arguments_list RPARENTH { $$.n = new FunctionInvocationNode((ExpressionNode)$1.n, (FunctionInvocationArgumentsListNode)$3.n); }		
+                    | property_getter LPARENTH function_invocation_arguments_list RPARENTH { var pg = (PropertyGetterNode)$1.n; $$.n = new MethodInvocationNode(pg.This, pg.Property, (FunctionInvocationArgumentsListNode)$3.n); }		
+					;
+
+function_invocation_arguments_list  : expression { $$.n = new FunctionInvocationArgumentsListNode((ExpressionNode)$1.n); }
+                                    | function_invocation_arguments_list COMMA expression { var al = (FunctionInvocationArgumentsListNode)$1.n; $$.n = al; al.Arguments.Add((ExpressionNode)$3.n); }
+			                        | /* empty */ { $$.n = new FunctionInvocationArgumentsListNode(); }
+                                    ;
+indexer_getter : statement_expression_no_property_getter LBRACKET expression RBRACKET { $$.n = new IndexerGetterNode((ExpressionNode)$1.n, (ExpressionNode)$3.n); }
+               ;
+
+property_getter : statement_expression DOT IDENTIFIER { $$.n = new PropertyGetterNode((ExpressionNode)$1.n, new IdentifierNode($3.str)); }
+                ;
+
+
+				 
 %%
