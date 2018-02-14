@@ -10,11 +10,12 @@ namespace AvgJavascriptVm.Complier
     {
         public static void Test()
         {
+            var text = File.ReadAllText(@"C:\temp\test.js");
             var sb = new StringBuilder();
             Console.SetOut(new StringWriter(sb));
             var parser = new RunnerParserWithLocation(new GlobalScope());
 
-            parser.Parse("(function ttt() { 2; });");
+            parser.Parse(text);
             parser.Result.ToString(new NodeStringBuilder());
         }
     }

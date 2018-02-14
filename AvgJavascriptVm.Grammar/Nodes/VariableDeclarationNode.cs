@@ -3,7 +3,7 @@ using AvgJavascriptVm.Grammar.Helpers;
 
 namespace AvgJavascriptVm.Grammar.Nodes
 {
-    public class VariableDeclarationNode: Node
+    public class VariableDeclarationNode: StatementNode
     {
         public List<VariableDeclarationIdentifierNode> Declarations { get; } = new List<VariableDeclarationIdentifierNode>();
 
