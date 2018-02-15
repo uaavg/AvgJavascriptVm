@@ -1,8 +1,8 @@
 ﻿namespace AvgJavascriptVm.Grammar.Nodes
 {
-    public class LessThanNode: ComparisonNode
+    public class LessThanNode: BinaryOperatorNode
     {
-        protected override string ComparisonToken { get; } = "<";
+        protected override string OperatorToken { get; } = "<";
 
         public LessThanNode(ExpressionNode lValue, ExpressionNode rValue) : base(lValue, rValue)
         {

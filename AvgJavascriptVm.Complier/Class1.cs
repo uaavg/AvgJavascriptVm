@@ -15,7 +15,7 @@ namespace AvgJavascriptVm.Complier
             Console.SetOut(new StringWriter(sb));
             var parser = new RunnerParserWithLocation(new GlobalScope());
 
-            parser.Parse("a == (b = 2) < 2;");
+            parser.Parse("b / c + a++ + 2 ++ - -3;");
             parser.Result.ToString(new NodeStringBuilder());
         }
     }

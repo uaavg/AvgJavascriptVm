@@ -18,6 +18,7 @@
 %token FUNCTION, IF, ELSE, WHILE, DO, FOR, RETURN, VAR, TRUE, FALSE
 %token SEMICOLON, DOT, COMMA,  LPARENTH, RPARENTH, LCURLYBRACE, RCURLYBRACE, LBRACKET, RBRACKET, COLON
 %token ASSIGN, ADDASSG, SUBASSG, MULTASSG, DIVASSG, REMASSG, EXPASSG, LEFTSHFTASG, RIGHTSHFTASSG, URIGHTSHIFTASSG, BITWISEANDASSG, BITWISEXORASSG, BITWISEORASSG
+%token REMAINDER, INCREMENT, DECREMENT, EXPONENTIATION, ADDITION, SUBTRACTION, MULTIPLICATION, DIVISION, UNARYPLUS, UNARYMINUS, POSTFIX, PREFIX
 %token NUMBER, IDENTIFIER, STRING
 %token THEN
 
@@ -26,9 +27,15 @@
 %right ASSIGN, ADDASSG, SUBASSG, MULTASSG, DIVASSG, REMASSG, EXPASSG, LEFTSHFTASSG, RIGHTSHFTASSG, URIGHTSHFTASSG, BITWISEANDASSG, BITWISEXORASSG, BITWISEORASSG
 %left STRICTEQUAL, STRICTNOTEQUAL, EQUAL, NOTEQUAL
 %left GREATERTHAN, GREATERTHANOREQUAL, LESSTHAN, LESSTHANOREQUAL
+%left ADDITION, SUBTRACTION
+%left MULTIPLICATION, DIVISION, REMAINDER
+%left EXPONENTIATION
+%left UNARYPLUS, UNARYMINUS, PREFIX, INCREMENT, DECREMENT
+%left POSTFIX
 %left DOT
 %left RBRACKET, LBRACKET
 %nonassoc LPARENTH, RPARENTH
+
 
 %%
 
@@ -75,6 +82,7 @@ indexer_expression : lvalue
 				   | object { $$.n = $1.n; }				   
 				   | function_invocation { $$.n = $1.n; }				   
 				   | comparison { $$.n = $1.n; }
+				   | arithmetic { $$.n = $1.n; }
 				   | LPARENTH expression RPARENTH { $$.n = $2.n; }		
 				   ;
 
@@ -202,6 +210,20 @@ comparison : indexer_expression EQUAL indexer_expression { $$.n = new EqualNode(
 		   | indexer_expression GREATERTHANOREQUAL indexer_expression { $$.n = new GreaterThanOrEqualNode((ExpressionNode)$1.n, (ExpressionNode)$3.n); }
 		   | indexer_expression LESSTHAN indexer_expression { $$.n = new LessThanNode((ExpressionNode)$1.n, (ExpressionNode)$3.n); }
 		   | indexer_expression LESSTHANOREQUAL indexer_expression { $$.n = new LessThanOrEqualNode((ExpressionNode)$1.n, (ExpressionNode)$3.n); }
+		   ;
+
+arithmetic : indexer_expression ADDITION indexer_expression { $$.n = new AdditionNode((ExpressionNode)$1.n, (ExpressionNode)$3.n); }
+           | indexer_expression SUBTRACTION indexer_expression { $$.n = new SubtractionNode((ExpressionNode)$1.n, (ExpressionNode)$3.n); }
+		   | indexer_expression MULTIPLICATION indexer_expression { $$.n = new MultiplicationNode((ExpressionNode)$1.n, (ExpressionNode)$3.n); }
+		   | indexer_expression DIVISION indexer_expression { $$.n = new DivisionNode((ExpressionNode)$1.n, (ExpressionNode)$3.n); }
+		   | indexer_expression REMAINDER indexer_expression { $$.n = new RemainderNode((ExpressionNode)$1.n, (ExpressionNode)$3.n); }
+		   | indexer_expression EXPONENTIATION indexer_expression { $$.n = new ExponentiationNode((ExpressionNode)$1.n, (ExpressionNode)$3.n); }
+		   | ADDITION indexer_expression %prec UNARYPLUS { $$.n = new UnaryPlusNode((ExpressionNode)$2.n); } 
+		   | SUBTRACTION indexer_expression %prec UNARYMINUS { $$.n = new UnaryNegationNode((ExpressionNode)$2.n); } 
+		   | INCREMENT indexer_expression %prec PREFIX { $$.n = new PrefixIncrement((ExpressionNode)$2.n); } 
+		   | indexer_expression INCREMENT %prec POSTFIX { $$.n = new PostfixIncrement((ExpressionNode)$1.n); } 
+		   | DECREMENT indexer_expression %prec PREFIX { $$.n = new PrefixDecrement((ExpressionNode)$2.n); } 
+		   | indexer_expression DECREMENT %prec POSTFIX { $$.n = new PostfixDecrement((ExpressionNode)$1.n); } 
 		   ;
 
 %%

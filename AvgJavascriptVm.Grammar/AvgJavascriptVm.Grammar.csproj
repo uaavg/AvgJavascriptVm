@@ -67,6 +67,18 @@
     <Compile Include="Nodes\ObjectNode.cs" />
     <Compile Include="Nodes\ObjectPropertyIdentifierNode.cs" />
     <Compile Include="Nodes\ObjectPropertyNode.cs" />
+    <Compile Include="Nodes\Operators\Arithmetic\AdditionNode.cs" />
+    <Compile Include="Nodes\Operators\Arithmetic\DivisionNode.cs" />
+    <Compile Include="Nodes\Operators\Arithmetic\ExponentiationNode.cs" />
+    <Compile Include="Nodes\Operators\Arithmetic\MultiplicationNode.cs" />
+    <Compile Include="Nodes\Operators\Arithmetic\PostfixDecrement.cs" />
+    <Compile Include="Nodes\Operators\Arithmetic\PostfixIncrement.cs" />
+    <Compile Include="Nodes\Operators\Arithmetic\PrefixDecrement.cs" />
+    <Compile Include="Nodes\Operators\Arithmetic\PrefixIncrement.cs" />
+    <Compile Include="Nodes\Operators\Arithmetic\RemainderNode.cs" />
+    <Compile Include="Nodes\Operators\Arithmetic\SubtractionNode.cs" />
+    <Compile Include="Nodes\Operators\Arithmetic\UnaryNegationNode.cs" />
+    <Compile Include="Nodes\Operators\Arithmetic\UnaryPlusNode.cs" />
     <Compile Include="Nodes\Operators\Assignment\AdditionAssignmentNode.cs" />
     <Compile Include="Nodes\Operators\Assignment\AssignmentNode.cs" />
     <Compile Include="Nodes\Operators\Assignment\BitwiseAndAssignmentNode.cs" />
@@ -80,7 +92,7 @@
     <Compile Include="Nodes\Operators\Assignment\RightShiftAssignmentNode.cs" />
     <Compile Include="Nodes\Operators\Assignment\SubstractionAssignmentNode.cs" />
     <Compile Include="Nodes\Operators\Assignment\UnsignedRightShiftAssignmentNode.cs" />
-    <Compile Include="Nodes\Operators\Comparison\ComparisonNode.cs" />
+    <Compile Include="Nodes\Operators\BinaryOperatorNode.cs" />
     <Compile Include="Nodes\Operators\Comparison\EqualNode.cs" />
     <Compile Include="Nodes\Operators\Comparison\GreaterThanNode.cs" />
     <Compile Include="Nodes\Operators\Comparison\GreaterThanOrEqualNode.cs" />
@@ -89,6 +101,7 @@
     <Compile Include="Nodes\Operators\Comparison\NotEqualNode.cs" />
     <Compile Include="Nodes\Operators\Comparison\StrictEqualNode.cs" />
     <Compile Include="Nodes\Operators\Comparison\StrictNotEqualNode.cs" />
+    <Compile Include="Nodes\Operators\UnaryOperatorNode.cs" />
     <Compile Include="Nodes\PropertyGetterNode.cs" />
     <Compile Include="Nodes\StatementsAndDeclarations.cs" />
     <Compile Include="Nodes\ReturnNode.cs" />
@@ -105,6 +118,9 @@
       <Project>{49cbddd8-9e52-49a1-a6a3-ff136916a9b0}</Project>
       <Name>AvgJavascriptVm.Core</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Nodes\Operators\Bitwise\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

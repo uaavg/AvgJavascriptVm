@@ -2,15 +2,15 @@
 
 namespace AvgJavascriptVm.Grammar.Nodes
 {
-    public abstract class ComparisonNode: ExpressionNode
+    public abstract class BinaryOperatorNode: ExpressionNode
     {
         public ExpressionNode LValue { get; }
 
         public ExpressionNode RValue { get; }
 
-        protected abstract string ComparisonToken { get; }        
+        protected abstract string OperatorToken { get; }        
 
-        protected ComparisonNode(ExpressionNode lValue, ExpressionNode rValue)
+        protected BinaryOperatorNode(ExpressionNode lValue, ExpressionNode rValue)
         {
             LValue = lValue;
             RValue = rValue;
@@ -19,7 +19,7 @@ namespace AvgJavascriptVm.Grammar.Nodes
         public override void ToString(NodeStringBuilder strBuilder)
         {
             LValue.ToString(strBuilder);
-            strBuilder.Append($" {ComparisonToken} ");
+            strBuilder.Append($" {OperatorToken} ");
             RValue.ToString(strBuilder);
         }
     }

@@ -31,6 +31,7 @@ Identifier      [a-zA-Z]+([a-zA-Z]|[0-9])*
 "true"          { return (int)Token.TRUE; }
 "false"         { return (int)Token.TRUE; }
 
+
 "==="           { return (int)Token.STRICTEQUAL; }
 "!=="           { return (int)Token.STRICTNOTEQUAL; }
 "=="            { return (int)Token.EQUAL; }
@@ -53,6 +54,15 @@ Identifier      [a-zA-Z]+([a-zA-Z]|[0-9])*
 "&="            { return (int)Token.BITWISEANDASSG; }
 "^="            { return (int)Token.BITWISEXORASSG; }
 "|="            { return (int)Token.BITWISEORASSG; }
+
+"%"             { return (int)Token.REMAINDER; }
+"++"            { return (int)Token.INCREMENT; }
+"--"            { return (int)Token.DECREMENT; }
+"**"            { return (int)Token.EXPONENTIATION; } 
+"+"             { return (int)Token.ADDITION; } 
+"-"             { return (int)Token.SUBTRACTION; } 
+"*"             { return (int)Token.MULTIPLICATION; } 
+"/"             { return (int)Token.DIVISION; }  
 
 ";"             { return (int)Token.SEMICOLON; }
 ","             { return (int)Token.COMMA; }
