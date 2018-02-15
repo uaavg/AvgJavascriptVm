@@ -77,6 +77,7 @@
     <Compile Include="Nodes\Operators\Arithmetic\PrefixIncrement.cs" />
     <Compile Include="Nodes\Operators\Arithmetic\RemainderNode.cs" />
     <Compile Include="Nodes\Operators\Arithmetic\SubtractionNode.cs" />
+    <Compile Include="Nodes\Operators\Arithmetic\UnaryIncrementDecrementNode.cs" />
     <Compile Include="Nodes\Operators\Arithmetic\UnaryNegationNode.cs" />
     <Compile Include="Nodes\Operators\Arithmetic\UnaryPlusNode.cs" />
     <Compile Include="Nodes\Operators\Assignment\AdditionAssignmentNode.cs" />

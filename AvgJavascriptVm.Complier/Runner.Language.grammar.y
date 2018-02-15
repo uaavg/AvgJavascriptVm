@@ -30,8 +30,8 @@
 %left ADDITION, SUBTRACTION
 %left MULTIPLICATION, DIVISION, REMAINDER
 %left EXPONENTIATION
-%left UNARYPLUS, UNARYMINUS, PREFIX, INCREMENT, DECREMENT
-%left POSTFIX
+%right UNARYPLUS, UNARYMINUS, PREFIX, INCREMENT, DECREMENT
+%nonassoc POSTFIX
 %left DOT
 %left RBRACKET, LBRACKET
 %nonassoc LPARENTH, RPARENTH
@@ -70,9 +70,13 @@ expression : statement_expression { $$.n = $1.n; }
 		   | function_named_expression { $$.n = $1.n; }
            ;
 
-statement_expression : indexer_expression
-					 | assignment { $$.n = $1.n; }
+statement_expression : assignment { $$.n = $1.n; }							 
+                     | binary_valid_expression { $$.n = $1.n; }
 					 ;
+
+binary_valid_expression : arithmetic { $$.n = $1.n; }
+                        | indexer_expression { $$.n = $1.n; }
+						;
 
 indexer_expression : lvalue
                    | NUMBER { $$.n = new NumberNode($1.num); }
@@ -81,9 +85,8 @@ indexer_expression : lvalue
 				   | array { $$.n = $1.n; }
 				   | object { $$.n = $1.n; }				   
 				   | function_invocation { $$.n = $1.n; }				   
-				   | comparison { $$.n = $1.n; }
-				   | arithmetic { $$.n = $1.n; }
-				   | LPARENTH expression RPARENTH { $$.n = $2.n; }		
+				   | comparison { $$.n = $1.n; }				   
+				   | LPARENTH expression RPARENTH { $$.n = $2.n; }	
 				   ;
 
 lvalue : IDENTIFIER { $$.n = new IdentifierNode($1.str); }
@@ -212,18 +215,18 @@ comparison : indexer_expression EQUAL indexer_expression { $$.n = new EqualNode(
 		   | indexer_expression LESSTHANOREQUAL indexer_expression { $$.n = new LessThanOrEqualNode((ExpressionNode)$1.n, (ExpressionNode)$3.n); }
 		   ;
 
-arithmetic : indexer_expression ADDITION indexer_expression { $$.n = new AdditionNode((ExpressionNode)$1.n, (ExpressionNode)$3.n); }
-           | indexer_expression SUBTRACTION indexer_expression { $$.n = new SubtractionNode((ExpressionNode)$1.n, (ExpressionNode)$3.n); }
-		   | indexer_expression MULTIPLICATION indexer_expression { $$.n = new MultiplicationNode((ExpressionNode)$1.n, (ExpressionNode)$3.n); }
-		   | indexer_expression DIVISION indexer_expression { $$.n = new DivisionNode((ExpressionNode)$1.n, (ExpressionNode)$3.n); }
-		   | indexer_expression REMAINDER indexer_expression { $$.n = new RemainderNode((ExpressionNode)$1.n, (ExpressionNode)$3.n); }
-		   | indexer_expression EXPONENTIATION indexer_expression { $$.n = new ExponentiationNode((ExpressionNode)$1.n, (ExpressionNode)$3.n); }
+arithmetic : binary_valid_expression ADDITION binary_valid_expression { $$.n = new AdditionNode((ExpressionNode)$1.n, (ExpressionNode)$3.n); }         
+           | binary_valid_expression SUBTRACTION binary_valid_expression { $$.n = new SubtractionNode((ExpressionNode)$1.n, (ExpressionNode)$3.n); } 
+		   | binary_valid_expression MULTIPLICATION binary_valid_expression { $$.n = new MultiplicationNode((ExpressionNode)$1.n, (ExpressionNode)$3.n); }
+		   | binary_valid_expression DIVISION binary_valid_expression { $$.n = new DivisionNode((ExpressionNode)$1.n, (ExpressionNode)$3.n); }
+		   | binary_valid_expression REMAINDER indexer_expression { $$.n = new RemainderNode((ExpressionNode)$1.n, (ExpressionNode)$3.n); } 
+		   | binary_valid_expression EXPONENTIATION binary_valid_expression { $$.n = new ExponentiationNode((ExpressionNode)$1.n, (ExpressionNode)$3.n); }
 		   | ADDITION indexer_expression %prec UNARYPLUS { $$.n = new UnaryPlusNode((ExpressionNode)$2.n); } 
-		   | SUBTRACTION indexer_expression %prec UNARYMINUS { $$.n = new UnaryNegationNode((ExpressionNode)$2.n); } 
-		   | INCREMENT indexer_expression %prec PREFIX { $$.n = new PrefixIncrement((ExpressionNode)$2.n); } 
-		   | indexer_expression INCREMENT %prec POSTFIX { $$.n = new PostfixIncrement((ExpressionNode)$1.n); } 
-		   | DECREMENT indexer_expression %prec PREFIX { $$.n = new PrefixDecrement((ExpressionNode)$2.n); } 
-		   | indexer_expression DECREMENT %prec POSTFIX { $$.n = new PostfixDecrement((ExpressionNode)$1.n); } 
+		   | SUBTRACTION indexer_expression %prec UNARYMINUS { $$.n = new UnaryNegationNode((ExpressionNode)$2.n); } 		   
+		   | INCREMENT lvalue %prec PREFIX { $$.n = new PrefixIncrement((ExpressionNode)$1.n); } 		   
+		   | lvalue INCREMENT %prec POSTFIX { $$.n = new PostfixIncrement((ExpressionNode)$1.n); } 
+		   | DECREMENT lvalue %prec PREFIX { $$.n = new PrefixDecrement((ExpressionNode)$2.n); } 
+		   | lvalue DECREMENT %prec POSTFIX { $$.n = new PostfixDecrement((ExpressionNode)$1.n); }
 		   ;
 
 %%
