@@ -94,6 +94,13 @@
     <Compile Include="Nodes\Operators\Assignment\SubstractionAssignmentNode.cs" />
     <Compile Include="Nodes\Operators\Assignment\UnsignedRightShiftAssignmentNode.cs" />
     <Compile Include="Nodes\Operators\BinaryOperatorNode.cs" />
+    <Compile Include="Nodes\Operators\Bitwise\BitwiseAndNode.cs" />
+    <Compile Include="Nodes\Operators\Bitwise\BitwiseNotNode.cs" />
+    <Compile Include="Nodes\Operators\Bitwise\BitwiseOrNode.cs" />
+    <Compile Include="Nodes\Operators\Bitwise\BitwiseXorNode.cs" />
+    <Compile Include="Nodes\Operators\Bitwise\LeftShiftNode.cs" />
+    <Compile Include="Nodes\Operators\Bitwise\SignPropagatingRightShiftNode.cs" />
+    <Compile Include="Nodes\Operators\Bitwise\ZeroFillRightShiftNode.cs" />
     <Compile Include="Nodes\Operators\Comparison\EqualNode.cs" />
     <Compile Include="Nodes\Operators\Comparison\GreaterThanNode.cs" />
     <Compile Include="Nodes\Operators\Comparison\GreaterThanOrEqualNode.cs" />
@@ -120,8 +127,6 @@
       <Name>AvgJavascriptVm.Core</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Nodes\Operators\Bitwise\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

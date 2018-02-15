@@ -1,10 +1,10 @@
 
 // ==========================================================================
-//  GPPG error listing for yacc source file <Runner.Language.grammar.y - 2/15/2018 4:57:17 PM>
+//  GPPG error listing for yacc source file <Runner.Language.grammar.y - 2/15/2018 5:10:30 PM>
 // ==========================================================================
 //  Version:  1.5.2
 //  Machine:  TX-P-0038
-//  DateTime: 2/15/2018 4:57:23 PM
+//  DateTime: 2/15/2018 5:10:31 PM
 //  UserName: artem.glynskyi
 // ==========================================================================
 
@@ -30,6 +30,7 @@
 %token SEMICOLON, DOT, COMMA,  LPARENTH, RPARENTH, LCURLYBRACE, RCURLYBRACE, LBRACKET, RBRACKET, COLON
 %token ASSIGN, ADDASSG, SUBASSG, MULTASSG, DIVASSG, REMASSG, EXPASSG, LEFTSHFTASG, RIGHTSHFTASSG, URIGHTSHIFTASSG, BITWISEANDASSG, BITWISEXORASSG, BITWISEORASSG
 %token REMAINDER, INCREMENT, DECREMENT, EXPONENTIATION, ADDITION, SUBTRACTION, MULTIPLICATION, DIVISION, UNARYPLUS, UNARYMINUS, POSTFIX, PREFIX
+%token BITWISEAND, BITWISEOR, BITWISEXOR, BITWISENOT, LEFTSHIFT, ZEROFILLRIGHTSHIFT, SIGNPROPRIGHTSHIFT
 %token NUMBER, IDENTIFIER, STRING
 %token THEN
 
@@ -49,6 +50,8 @@
 
 
 %%
+// Warning: NonTerminal symbol "bitwise" is unreachable
+// ----------------------------------------------------
 
 main : statements_and_declarations { CheckIfReturnInMain(); Result = (StatementsAndDeclarations)$1.n; $$.n = Result; }
      | /* empty */ { Result = new StatementsAndDeclarations(); $$.n = Result; }
@@ -87,11 +90,9 @@ statement_expression : assignment { $$.n = $1.n; }
 
 binary_valid_expression : arithmetic { $$.n = $1.n; }
                         | indexer_expression { $$.n = $1.n; }
+						;
 
 indexer_expression : lvalue
-//^^^^^^^^^^^^^^^^
-// Error: Syntax error, unexpected anchoredSymbol
-// ----------------------------------------------
                    | NUMBER { $$.n = new NumberNode($1.num); }
 				   | STRING { $$.n = new StringNode($1.str); }
 				   | boolean { $$.n = $1.n; }
@@ -218,14 +219,14 @@ assignment : lvalue ASSIGN expression { $$.n = new AssignmentNode((ExpressionNod
 		   | lvalue BITWISEORASSG expression { $$.n = new BitwiseOrAssignmentNode((ExpressionNode)$1.n, (ExpressionNode)$3.n); }
 		   ;
 
-comparison : indexer_expression EQUAL indexer_expression { $$.n = new EqualNode((ExpressionNode)$1.n, (ExpressionNode)$3.n); }
-           | indexer_expression NOTEQUAL indexer_expression { $$.n = new NotEqualNode((ExpressionNode)$1.n, (ExpressionNode)$3.n); }
-		   | indexer_expression STRICTEQUAL indexer_expression { $$.n = new StrictEqualNode((ExpressionNode)$1.n, (ExpressionNode)$3.n); }
-		   | indexer_expression STRICTNOTEQUAL indexer_expression { $$.n = new StrictNotEqualNode((ExpressionNode)$1.n, (ExpressionNode)$3.n); }
-		   | indexer_expression GREATERTHAN indexer_expression { $$.n = new GreaterThanNode((ExpressionNode)$1.n, (ExpressionNode)$3.n); }
-		   | indexer_expression GREATERTHANOREQUAL indexer_expression { $$.n = new GreaterThanOrEqualNode((ExpressionNode)$1.n, (ExpressionNode)$3.n); }
-		   | indexer_expression LESSTHAN indexer_expression { $$.n = new LessThanNode((ExpressionNode)$1.n, (ExpressionNode)$3.n); }
-		   | indexer_expression LESSTHANOREQUAL indexer_expression { $$.n = new LessThanOrEqualNode((ExpressionNode)$1.n, (ExpressionNode)$3.n); }
+comparison : binary_valid_expression EQUAL binary_valid_expression { $$.n = new EqualNode((ExpressionNode)$1.n, (ExpressionNode)$3.n); }
+           | binary_valid_expression NOTEQUAL binary_valid_expression { $$.n = new NotEqualNode((ExpressionNode)$1.n, (ExpressionNode)$3.n); }
+		   | binary_valid_expression STRICTEQUAL binary_valid_expression { $$.n = new StrictEqualNode((ExpressionNode)$1.n, (ExpressionNode)$3.n); }
+		   | binary_valid_expression STRICTNOTEQUAL binary_valid_expression { $$.n = new StrictNotEqualNode((ExpressionNode)$1.n, (ExpressionNode)$3.n); }
+		   | binary_valid_expression GREATERTHAN binary_valid_expression { $$.n = new GreaterThanNode((ExpressionNode)$1.n, (ExpressionNode)$3.n); }
+		   | binary_valid_expression GREATERTHANOREQUAL binary_valid_expression { $$.n = new GreaterThanOrEqualNode((ExpressionNode)$1.n, (ExpressionNode)$3.n); }
+		   | binary_valid_expression LESSTHAN binary_valid_expression { $$.n = new LessThanNode((ExpressionNode)$1.n, (ExpressionNode)$3.n); }
+		   | binary_valid_expression LESSTHANOREQUAL binary_valid_expression { $$.n = new LessThanOrEqualNode((ExpressionNode)$1.n, (ExpressionNode)$3.n); }
 		   ;
 
 arithmetic : binary_valid_expression ADDITION binary_valid_expression { $$.n = new AdditionNode((ExpressionNode)$1.n, (ExpressionNode)$3.n); }         
@@ -241,6 +242,9 @@ arithmetic : binary_valid_expression ADDITION binary_valid_expression { $$.n = n
 		   | DECREMENT lvalue %prec PREFIX { $$.n = new PrefixDecrement((ExpressionNode)$2.n); } 
 		   | lvalue DECREMENT %prec POSTFIX { $$.n = new PostfixDecrement((ExpressionNode)$1.n); }
 		   ;
+
+bitwise: binary_valid_expression BITWISEAND binary_valid_expression { $$.n = new BitwiseAndNode((ExpressionNode)$1.n, (ExpressionNode)$3.n); }
+        ;
 
 %%// ==========================================================================
 

@@ -19,6 +19,7 @@
 %token SEMICOLON, DOT, COMMA,  LPARENTH, RPARENTH, LCURLYBRACE, RCURLYBRACE, LBRACKET, RBRACKET, COLON
 %token ASSIGN, ADDASSG, SUBASSG, MULTASSG, DIVASSG, REMASSG, EXPASSG, LEFTSHFTASG, RIGHTSHFTASSG, URIGHTSHIFTASSG, BITWISEANDASSG, BITWISEXORASSG, BITWISEORASSG
 %token REMAINDER, INCREMENT, DECREMENT, EXPONENTIATION, ADDITION, SUBTRACTION, MULTIPLICATION, DIVISION, UNARYPLUS, UNARYMINUS, POSTFIX, PREFIX
+%token BITWISEAND, BITWISEOR, BITWISEXOR, BITWISENOT, LEFTSHIFT, ZEROFILLRIGHTSHIFT, SIGNPROPRIGHTSHIFT
 %token NUMBER, IDENTIFIER, STRING
 %token THEN
 
@@ -76,6 +77,7 @@ statement_expression : assignment { $$.n = $1.n; }
 
 binary_valid_expression : arithmetic { $$.n = $1.n; }
                         | indexer_expression { $$.n = $1.n; }
+						| comparison { $$.n = $1.n; }
 						;
 
 indexer_expression : lvalue
@@ -84,8 +86,7 @@ indexer_expression : lvalue
 				   | boolean { $$.n = $1.n; }
 				   | array { $$.n = $1.n; }
 				   | object { $$.n = $1.n; }				   
-				   | function_invocation { $$.n = $1.n; }				   
-				   | comparison { $$.n = $1.n; }				   
+				   | function_invocation { $$.n = $1.n; }				   				   	   
 				   | LPARENTH expression RPARENTH { $$.n = $2.n; }	
 				   ;
 
@@ -205,14 +206,14 @@ assignment : lvalue ASSIGN expression { $$.n = new AssignmentNode((ExpressionNod
 		   | lvalue BITWISEORASSG expression { $$.n = new BitwiseOrAssignmentNode((ExpressionNode)$1.n, (ExpressionNode)$3.n); }
 		   ;
 
-comparison : indexer_expression EQUAL indexer_expression { $$.n = new EqualNode((ExpressionNode)$1.n, (ExpressionNode)$3.n); }
-           | indexer_expression NOTEQUAL indexer_expression { $$.n = new NotEqualNode((ExpressionNode)$1.n, (ExpressionNode)$3.n); }
-		   | indexer_expression STRICTEQUAL indexer_expression { $$.n = new StrictEqualNode((ExpressionNode)$1.n, (ExpressionNode)$3.n); }
-		   | indexer_expression STRICTNOTEQUAL indexer_expression { $$.n = new StrictNotEqualNode((ExpressionNode)$1.n, (ExpressionNode)$3.n); }
-		   | indexer_expression GREATERTHAN indexer_expression { $$.n = new GreaterThanNode((ExpressionNode)$1.n, (ExpressionNode)$3.n); }
-		   | indexer_expression GREATERTHANOREQUAL indexer_expression { $$.n = new GreaterThanOrEqualNode((ExpressionNode)$1.n, (ExpressionNode)$3.n); }
-		   | indexer_expression LESSTHAN indexer_expression { $$.n = new LessThanNode((ExpressionNode)$1.n, (ExpressionNode)$3.n); }
-		   | indexer_expression LESSTHANOREQUAL indexer_expression { $$.n = new LessThanOrEqualNode((ExpressionNode)$1.n, (ExpressionNode)$3.n); }
+comparison : binary_valid_expression EQUAL binary_valid_expression { $$.n = new EqualNode((ExpressionNode)$1.n, (ExpressionNode)$3.n); }
+           | binary_valid_expression NOTEQUAL binary_valid_expression { $$.n = new NotEqualNode((ExpressionNode)$1.n, (ExpressionNode)$3.n); }
+		   | binary_valid_expression STRICTEQUAL binary_valid_expression { $$.n = new StrictEqualNode((ExpressionNode)$1.n, (ExpressionNode)$3.n); }
+		   | binary_valid_expression STRICTNOTEQUAL binary_valid_expression { $$.n = new StrictNotEqualNode((ExpressionNode)$1.n, (ExpressionNode)$3.n); }
+		   | binary_valid_expression GREATERTHAN binary_valid_expression { $$.n = new GreaterThanNode((ExpressionNode)$1.n, (ExpressionNode)$3.n); }
+		   | binary_valid_expression GREATERTHANOREQUAL binary_valid_expression { $$.n = new GreaterThanOrEqualNode((ExpressionNode)$1.n, (ExpressionNode)$3.n); }
+		   | binary_valid_expression LESSTHAN binary_valid_expression { $$.n = new LessThanNode((ExpressionNode)$1.n, (ExpressionNode)$3.n); }
+		   | binary_valid_expression LESSTHANOREQUAL binary_valid_expression { $$.n = new LessThanOrEqualNode((ExpressionNode)$1.n, (ExpressionNode)$3.n); }
 		   ;
 
 arithmetic : binary_valid_expression ADDITION binary_valid_expression { $$.n = new AdditionNode((ExpressionNode)$1.n, (ExpressionNode)$3.n); }         

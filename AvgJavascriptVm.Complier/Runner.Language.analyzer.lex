@@ -62,7 +62,15 @@ Identifier      [a-zA-Z]+([a-zA-Z]|[0-9])*
 "+"             { return (int)Token.ADDITION; } 
 "-"             { return (int)Token.SUBTRACTION; } 
 "*"             { return (int)Token.MULTIPLICATION; } 
-"/"             { return (int)Token.DIVISION; }  
+"/"             { return (int)Token.DIVISION; } 
+
+"&"             { return (int)Token.BITWISEAND; } 
+"|"             { return (int)Token.BITWISEOR; } 
+"^"             { return (int)Token.BITWISEXOR; } 
+"~"             { return (int)Token.BITWISENOT; } 
+"<<"            { return (int)Token.LEFTSHIFT; } 
+">>>"           { return (int)Token.ZEROFILLRIGHTSHIFT; } 
+">>"            { return (int)Token.SIGNPROPRIGHTSHIFT; } 
 
 ";"             { return (int)Token.SEMICOLON; }
 ","             { return (int)Token.COMMA; }
