@@ -1,4 +1,4 @@
-﻿namespace AvgJavascriptVm.Grammar.Nodes.Bitwise
+﻿namespace AvgJavascriptVm.Grammar.Nodes
 {
     public class BitwiseAndNode: BinaryOperatorNode
     {

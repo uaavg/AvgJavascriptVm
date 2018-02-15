@@ -26,12 +26,16 @@
 %nonassoc THEN 
 %nonassoc ELSE
 %right ASSIGN, ADDASSG, SUBASSG, MULTASSG, DIVASSG, REMASSG, EXPASSG, LEFTSHFTASSG, RIGHTSHFTASSG, URIGHTSHFTASSG, BITWISEANDASSG, BITWISEXORASSG, BITWISEORASSG
+%left BITWISEOR
+%left BITWISEXOR
+%left BITWISEAND
 %left STRICTEQUAL, STRICTNOTEQUAL, EQUAL, NOTEQUAL
 %left GREATERTHAN, GREATERTHANOREQUAL, LESSTHAN, LESSTHANOREQUAL
+%left LEFTSHIFT, ZEROFILLRIGHTSHIFT, SIGNPROPRIGHTSHIFT
 %left ADDITION, SUBTRACTION
 %left MULTIPLICATION, DIVISION, REMAINDER
 %left EXPONENTIATION
-%right UNARYPLUS, UNARYMINUS, PREFIX, INCREMENT, DECREMENT
+%right UNARYPLUS, UNARYMINUS, PREFIX, INCREMENT, DECREMENT, BITWISENOT
 %nonassoc POSTFIX
 %left DOT
 %left RBRACKET, LBRACKET
@@ -78,6 +82,7 @@ statement_expression : assignment { $$.n = $1.n; }
 binary_valid_expression : arithmetic { $$.n = $1.n; }
                         | indexer_expression { $$.n = $1.n; }
 						| comparison { $$.n = $1.n; }
+						| bitwise { $$.n = $1.n; }
 						;
 
 indexer_expression : lvalue
@@ -225,9 +230,17 @@ arithmetic : binary_valid_expression ADDITION binary_valid_expression { $$.n = n
 		   | ADDITION indexer_expression %prec UNARYPLUS { $$.n = new UnaryPlusNode((ExpressionNode)$2.n); } 
 		   | SUBTRACTION indexer_expression %prec UNARYMINUS { $$.n = new UnaryNegationNode((ExpressionNode)$2.n); } 		   
 		   | INCREMENT lvalue %prec PREFIX { $$.n = new PrefixIncrement((ExpressionNode)$1.n); } 		   
-		   | lvalue INCREMENT %prec POSTFIX { $$.n = new PostfixIncrement((ExpressionNode)$1.n); } 
+		   | lvalue INCREMENT %prec POSTFIX { $$.n = new PostfixIncrement((ExpressionNode)$1.n); }  
 		   | DECREMENT lvalue %prec PREFIX { $$.n = new PrefixDecrement((ExpressionNode)$2.n); } 
 		   | lvalue DECREMENT %prec POSTFIX { $$.n = new PostfixDecrement((ExpressionNode)$1.n); }
 		   ;
 
+bitwise: binary_valid_expression BITWISEAND binary_valid_expression { $$.n = new BitwiseAndNode((ExpressionNode)$1.n, (ExpressionNode)$3.n); }
+       | binary_valid_expression BITWISEOR binary_valid_expression { $$.n = new BitwiseOrNode((ExpressionNode)$1.n, (ExpressionNode)$3.n); }
+	   | binary_valid_expression BITWISEXOR binary_valid_expression { $$.n = new BitwiseXorNode((ExpressionNode)$1.n, (ExpressionNode)$3.n); }
+	   | BITWISENOT indexer_expression { $$.n = new BitwiseNotNode((ExpressionNode)$2.n); }
+	   | binary_valid_expression LEFTSHIFT binary_valid_expression { $$.n = new LeftShiftNode((ExpressionNode)$1.n, (ExpressionNode)$3.n); }
+	   | binary_valid_expression SIGNPROPRIGHTSHIFT binary_valid_expression { $$.n = new SignPropagatingRightShiftNode((ExpressionNode)$1.n, (ExpressionNode)$3.n); }
+	   | binary_valid_expression ZEROFILLRIGHTSHIFT binary_valid_expression { $$.n = new ZeroFillRightShiftNode((ExpressionNode)$1.n, (ExpressionNode)$3.n); }
+       ;
 %%

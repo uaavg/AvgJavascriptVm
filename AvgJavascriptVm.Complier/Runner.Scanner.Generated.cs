@@ -6,9 +6,9 @@
 //
 //  GPLEX Version:  1.2.2
 //  Machine:  TX-P-0038
-//  DateTime: 2/15/2018 6:43:36 PM
+//  DateTime: 2/15/2018 6:59:41 PM
 //  UserName: artem.glynskyi
-//  GPLEX input file <Runner.Language.analyzer.lex - 2/15/2018 5:07:44 PM>
+//  GPLEX input file <Runner.Language.analyzer.lex - 2/15/2018 6:59:40 PM>
 //  GPLEX frame file <embedded resource>
 //
 //  Option settings: verbose, parser, stack, minimize

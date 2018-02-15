@@ -1,10 +1,10 @@
 
 // ==========================================================================
-//  GPPG error listing for yacc source file <Runner.Language.grammar.y - 2/15/2018 5:10:30 PM>
+//  GPPG error listing for yacc source file <Runner.Language.grammar.y - 2/15/2018 6:46:12 PM>
 // ==========================================================================
 //  Version:  1.5.2
 //  Machine:  TX-P-0038
-//  DateTime: 2/15/2018 5:10:31 PM
+//  DateTime: 2/15/2018 6:46:13 PM
 //  UserName: artem.glynskyi
 // ==========================================================================
 
@@ -90,6 +90,7 @@ statement_expression : assignment { $$.n = $1.n; }
 
 binary_valid_expression : arithmetic { $$.n = $1.n; }
                         | indexer_expression { $$.n = $1.n; }
+						| comparison { $$.n = $1.n; }
 						;
 
 indexer_expression : lvalue
@@ -98,8 +99,7 @@ indexer_expression : lvalue
 				   | boolean { $$.n = $1.n; }
 				   | array { $$.n = $1.n; }
 				   | object { $$.n = $1.n; }				   
-				   | function_invocation { $$.n = $1.n; }				   
-				   | comparison { $$.n = $1.n; }				   
+				   | function_invocation { $$.n = $1.n; }				   				   	   
 				   | LPARENTH expression RPARENTH { $$.n = $2.n; }	
 				   ;
 
@@ -244,7 +244,6 @@ arithmetic : binary_valid_expression ADDITION binary_valid_expression { $$.n = n
 		   ;
 
 bitwise: binary_valid_expression BITWISEAND binary_valid_expression { $$.n = new BitwiseAndNode((ExpressionNode)$1.n, (ExpressionNode)$3.n); }
-        ;
-
+         ;
 %%// ==========================================================================
 

@@ -36,11 +36,6 @@ Identifier      [a-zA-Z]+([a-zA-Z]|[0-9])*
 "!=="           { return (int)Token.STRICTNOTEQUAL; }
 "=="            { return (int)Token.EQUAL; }
 "!="            { return (int)Token.NOTEQUAL; }
-">"             { return (int)Token.GREATERTHAN; }
-">="            { return (int)Token.GREATERTHANOREQUAL; }
-"<"             { return (int)Token.LESSTHAN; }
-"<="            { return (int)Token.LESSTHANOREQUAL; }
-
 "="             { return (int)Token.ASSIGN; }
 "+="            { return (int)Token.ADDASSG; }
 "-="            { return (int)Token.SUBASSG; }
@@ -54,7 +49,6 @@ Identifier      [a-zA-Z]+([a-zA-Z]|[0-9])*
 "&="            { return (int)Token.BITWISEANDASSG; }
 "^="            { return (int)Token.BITWISEXORASSG; }
 "|="            { return (int)Token.BITWISEORASSG; }
-
 "%"             { return (int)Token.REMAINDER; }
 "++"            { return (int)Token.INCREMENT; }
 "--"            { return (int)Token.DECREMENT; }
@@ -63,7 +57,6 @@ Identifier      [a-zA-Z]+([a-zA-Z]|[0-9])*
 "-"             { return (int)Token.SUBTRACTION; } 
 "*"             { return (int)Token.MULTIPLICATION; } 
 "/"             { return (int)Token.DIVISION; } 
-
 "&"             { return (int)Token.BITWISEAND; } 
 "|"             { return (int)Token.BITWISEOR; } 
 "^"             { return (int)Token.BITWISEXOR; } 
@@ -71,7 +64,10 @@ Identifier      [a-zA-Z]+([a-zA-Z]|[0-9])*
 "<<"            { return (int)Token.LEFTSHIFT; } 
 ">>>"           { return (int)Token.ZEROFILLRIGHTSHIFT; } 
 ">>"            { return (int)Token.SIGNPROPRIGHTSHIFT; } 
-
+">"             { return (int)Token.GREATERTHAN; }
+">="            { return (int)Token.GREATERTHANOREQUAL; }
+"<"             { return (int)Token.LESSTHAN; }
+"<="            { return (int)Token.LESSTHANOREQUAL; }
 ";"             { return (int)Token.SEMICOLON; }
 ","             { return (int)Token.COMMA; }
 "."             { return (int)Token.DOT; }

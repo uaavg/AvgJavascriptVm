@@ -1,13 +1,19 @@
-﻿namespace AvgJavascriptVm.Grammar.Nodes.Bitwise
-{
-    public class BitwiseNotNode: BinaryOperatorNode
-    {
-        protected override string OperatorToken { get; } = "~";
+﻿using AvgJavascriptVm.Grammar.Helpers;
 
-        public BitwiseNotNode(ExpressionNode lValue, ExpressionNode rValue) : 
-            base(lValue, rValue)
+namespace AvgJavascriptVm.Grammar.Nodes
+{
+    public class BitwiseNotNode : UnaryOperatorNode
+    {
+        public BitwiseNotNode(ExpressionNode value) :
+            base(value)
         {
 
+        }
+
+        public override void ToString(NodeStringBuilder strBuilder)
+        {
+            strBuilder.Append("~");
+            Value.ToString(strBuilder);
         }
     }
 }
