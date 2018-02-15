@@ -1,23 +1,30 @@
-﻿using AvgJavascriptVm.Grammar.Helpers;
+﻿using System;
+using AvgJavascriptVm.Grammar.Helpers;
 
-namespace AvgJavascriptVm.Grammar.Nodes.Operators.Assignment
+namespace AvgJavascriptVm.Grammar.Nodes
 {
-    public class AssignmentNode: Node
+    public class AssignmentNode: ExpressionNode
     {
-        public IdentifierNode Identifier { get; }
+        public ExpressionNode LValue { get; }
 
         public ExpressionNode RValue { get; }
 
-        public AssignmentNode(IdentifierNode identifier, ExpressionNode rValue)
+        protected virtual string AssignmentToken { get; } = "=";
+
+        public AssignmentNode(ExpressionNode lValue, ExpressionNode rValue)
         {
-            Identifier = identifier;
+            if (!(lValue is IdentifierNode) && !(lValue is IndexerGetterNode) && !(lValue is PropertyGetterNode))
+            {
+                throw new ApplicationException("lvalue must be identifier, indexer getter or property getter node");
+            }
+            LValue = lValue;
             RValue = rValue;
         }
 
         public override void ToString(NodeStringBuilder strBuilder)
         {
-            Identifier.ToString(strBuilder);
-            strBuilder.Append(" = ");
+            LValue.ToString(strBuilder);
+            strBuilder.Append($" {AssignmentToken} ");
             RValue.ToString(strBuilder);
         }
     }

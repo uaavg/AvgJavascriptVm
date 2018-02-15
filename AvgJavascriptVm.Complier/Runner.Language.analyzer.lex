@@ -30,6 +30,30 @@ Identifier      [a-zA-Z]+([a-zA-Z]|[0-9])*
 "var"           { return (int)Token.VAR; }
 "true"          { return (int)Token.TRUE; }
 "false"         { return (int)Token.TRUE; }
+
+"==="           { return (int)Token.STRICTEQUAL; }
+"!=="           { return (int)Token.STRICTNOTEQUAL; }
+"=="            { return (int)Token.EQUAL; }
+"!="            { return (int)Token.NOTEQUAL; }
+">"             { return (int)Token.GREATERTHAN; }
+">="            { return (int)Token.GREATERTHANOREQUAL; }
+"<"             { return (int)Token.LESSTHAN; }
+"<="            { return (int)Token.LESSTHANOREQUAL; }
+
+"="             { return (int)Token.ASSIGN; }
+"+="            { return (int)Token.ADDASSG; }
+"-="            { return (int)Token.SUBASSG; }
+"*="            { return (int)Token.MULTASSG; }
+"/="            { return (int)Token.DIVASSG; }
+"%="            { return (int)Token.REMASSG; }
+"**="           { return (int)Token.EXPASSG; }
+"<<="           { return (int)Token.LEFTSHFTASSG; }
+">>="           { return (int)Token.RIGHTSHFTASSG; }
+">>>="          { return (int)Token.URIGHTSHFTASSG; }
+"&="            { return (int)Token.BITWISEANDASSG; }
+"^="            { return (int)Token.BITWISEXORASSG; }
+"|="            { return (int)Token.BITWISEORASSG; }
+
 ";"             { return (int)Token.SEMICOLON; }
 ","             { return (int)Token.COMMA; }
 "."             { return (int)Token.DOT; }
@@ -39,7 +63,6 @@ Identifier      [a-zA-Z]+([a-zA-Z]|[0-9])*
 "}"             { return (int)Token.RCURLYBRACE; }
 "["             { return (int)Token.LBRACKET; }
 "]"             { return (int)Token.RBRACKET; }
-"="             { return (int)Token.ASSIGN; }
 ":"             { return (int)Token.COLON; }
 {Number}		{ GetNumber(); return (int)Token.NUMBER; }
 {Identifier}    { GetIdentifier(); return (int)Token.IDENTIFIER; }

@@ -16,12 +16,19 @@
 %start main
 
 %token FUNCTION, IF, ELSE, WHILE, DO, FOR, RETURN, VAR, TRUE, FALSE
-%token SEMICOLON, DOT, COMMA,  LPARENTH, RPARENTH, LCURLYBRACE, RCURLYBRACE, ASSIGN, LBRACKET, RBRACKET, COLON
+%token SEMICOLON, DOT, COMMA,  LPARENTH, RPARENTH, LCURLYBRACE, RCURLYBRACE, LBRACKET, RBRACKET, COLON
+%token ASSIGN, ADDASSG, SUBASSG, MULTASSG, DIVASSG, REMASSG, EXPASSG, LEFTSHFTASG, RIGHTSHFTASSG, URIGHTSHIFTASSG, BITWISEANDASSG, BITWISEXORASSG, BITWISEORASSG
 %token NUMBER, IDENTIFIER, STRING
 %token THEN
 
 %nonassoc THEN 
 %nonassoc ELSE
+%right ASSIGN, ADDASSG, SUBASSG, MULTASSG, DIVASSG, REMASSG, EXPASSG, LEFTSHFTASSG, RIGHTSHFTASSG, URIGHTSHFTASSG, BITWISEANDASSG, BITWISEXORASSG, BITWISEORASSG
+%left STRICTEQUAL, STRICTNOTEQUAL, EQUAL, NOTEQUAL
+%left GREATERTHAN, GREATERTHANOREQUAL, LESSTHAN, LESSTHANOREQUAL
+%left DOT
+%left RBRACKET, LBRACKET
+%nonassoc LPARENTH, RPARENTH
 
 %%
 
@@ -56,20 +63,25 @@ expression : statement_expression { $$.n = $1.n; }
 		   | function_named_expression { $$.n = $1.n; }
            ;
 
-statement_expression : statement_expression_no_property_getter { $$.n = $1.n; }
-					 | property_getter { $$.n = $1.n; }
-					 | LPARENTH expression RPARENTH { $$.n = $2.n; }
+statement_expression : indexer_expression
+					 | assignment { $$.n = $1.n; }
 					 ;
 
-statement_expression_no_property_getter : IDENTIFIER { $$.n = new IdentifierNode($1.str); }
-										| NUMBER { $$.n = new NumberNode($1.num); }
-										| STRING { $$.n = new StringNode($1.str); }
-										| boolean { $$.n = $1.n; }
-										| array { $$.n = $1.n; }
-										| object { $$.n = $1.n; }
-										| function_invocation { $$.n = $1.n; }	
-										| indexer_getter { $$.n = $1.n; }
-										;
+indexer_expression : lvalue
+                   | NUMBER { $$.n = new NumberNode($1.num); }
+				   | STRING { $$.n = new StringNode($1.str); }
+				   | boolean { $$.n = $1.n; }
+				   | array { $$.n = $1.n; }
+				   | object { $$.n = $1.n; }				   
+				   | function_invocation { $$.n = $1.n; }				   
+				   | comparison { $$.n = $1.n; }
+				   | LPARENTH expression RPARENTH { $$.n = $2.n; }		
+				   ;
+
+lvalue : IDENTIFIER { $$.n = new IdentifierNode($1.str); }
+       | property_getter { $$.n = $1.n; }
+       | indexer_getter { $$.n = $1.n; }
+	   ;
 
 block : LCURLYBRACE RCURLYBRACE { $$.n = new BlockNode((StatementsNode)$2.n); } 
       | LCURLYBRACE statements RCURLYBRACE { $$.n = new BlockNode((StatementsNode)$2.n); }
@@ -153,20 +165,43 @@ object_property_identifier : IDENTIFIER { $$.n = new ObjectPropertyIdentifierNod
                            | STRING { $$.n = new ObjectPropertyIdentifierNode(new StringNode($1.str)); }
                            ;
 
-function_invocation : statement_expression_no_property_getter LPARENTH function_invocation_arguments_list RPARENTH { $$.n = new FunctionInvocationNode((ExpressionNode)$1.n, (FunctionInvocationArgumentsListNode)$3.n); }		
-                    | property_getter LPARENTH function_invocation_arguments_list RPARENTH { var pg = (PropertyGetterNode)$1.n; $$.n = new MethodInvocationNode(pg.This, pg.Property, (FunctionInvocationArgumentsListNode)$3.n); }		
+function_invocation : indexer_expression LPARENTH function_invocation_arguments_list RPARENTH { $$.n = new FunctionInvocationNode((ExpressionNode)$1.n, (FunctionInvocationArgumentsListNode)$3.n); }		                    
 					;
 
 function_invocation_arguments_list  : expression { $$.n = new FunctionInvocationArgumentsListNode((ExpressionNode)$1.n); }
                                     | function_invocation_arguments_list COMMA expression { var al = (FunctionInvocationArgumentsListNode)$1.n; $$.n = al; al.Arguments.Add((ExpressionNode)$3.n); }
 			                        | /* empty */ { $$.n = new FunctionInvocationArgumentsListNode(); }
                                     ;
-indexer_getter : statement_expression_no_property_getter LBRACKET expression RBRACKET { $$.n = new IndexerGetterNode((ExpressionNode)$1.n, (ExpressionNode)$3.n); }
+
+indexer_getter : indexer_expression LBRACKET expression RBRACKET { $$.n = new IndexerGetterNode((ExpressionNode)$1.n, (ExpressionNode)$3.n); }
                ;
 
-property_getter : statement_expression DOT IDENTIFIER { $$.n = new PropertyGetterNode((ExpressionNode)$1.n, new IdentifierNode($3.str)); }
+property_getter : indexer_expression DOT IDENTIFIER { $$.n = new PropertyGetterNode((ExpressionNode)$1.n, new IdentifierNode($3.str)); }
                 ;
 
+assignment : lvalue ASSIGN expression { $$.n = new AssignmentNode((ExpressionNode)$1.n, (ExpressionNode)$3.n); } 
+           | lvalue ADDASSG expression { $$.n = new AdditionAssignmentNode((ExpressionNode)$1.n, (ExpressionNode)$3.n); }
+		   | lvalue SUBASSG expression { $$.n = new SubstractionAssignmentNode((ExpressionNode)$1.n, (ExpressionNode)$3.n); }
+		   | lvalue MULTASSG expression { $$.n = new MultiplicationAssignmentNode((ExpressionNode)$1.n, (ExpressionNode)$3.n); }
+		   | lvalue DIVASSG expression { $$.n = new DivisonAssignmentNode((ExpressionNode)$1.n, (ExpressionNode)$3.n); }
+		   | lvalue REMASSG expression { $$.n = new RemainderAssignmentNode((ExpressionNode)$1.n, (ExpressionNode)$3.n); }
+		   | lvalue EXPASSG expression { $$.n = new ExponentiationAssignmentNode((ExpressionNode)$1.n, (ExpressionNode)$3.n); }
+		   | lvalue LEFTSHFTASG expression { $$.n = new LeftShiftAssignmentNode((ExpressionNode)$1.n, (ExpressionNode)$3.n); }
+		   | lvalue RIGHTSHFTASSG expression { $$.n = new RightShiftAssignmentNode((ExpressionNode)$1.n, (ExpressionNode)$3.n); }
+		   | lvalue URIGHTSHFTASSG expression { $$.n = new UnsignedRightShiftAssignmentNode((ExpressionNode)$1.n, (ExpressionNode)$3.n); }
+		   | lvalue BITWISEANDASSG expression { $$.n = new BitwiseAndAssignmentNode((ExpressionNode)$1.n, (ExpressionNode)$3.n); }
+		   | lvalue BITWISEXORASSG expression { $$.n = new BitwiseXorAssignmentNode((ExpressionNode)$1.n, (ExpressionNode)$3.n); }
+		   | lvalue BITWISEORASSG expression { $$.n = new BitwiseOrAssignmentNode((ExpressionNode)$1.n, (ExpressionNode)$3.n); }
+		   ;
 
-				 
+comparison : indexer_expression EQUAL indexer_expression { $$.n = new EqualNode((ExpressionNode)$1.n, (ExpressionNode)$3.n); }
+           | indexer_expression NOTEQUAL indexer_expression { $$.n = new NotEqualNode((ExpressionNode)$1.n, (ExpressionNode)$3.n); }
+		   | indexer_expression STRICTEQUAL indexer_expression { $$.n = new StrictEqualNode((ExpressionNode)$1.n, (ExpressionNode)$3.n); }
+		   | indexer_expression STRICTNOTEQUAL indexer_expression { $$.n = new StrictNotEqualNode((ExpressionNode)$1.n, (ExpressionNode)$3.n); }
+		   | indexer_expression GREATERTHAN indexer_expression { $$.n = new GreaterThanNode((ExpressionNode)$1.n, (ExpressionNode)$3.n); }
+		   | indexer_expression GREATERTHANOREQUAL indexer_expression { $$.n = new GreaterThanOrEqualNode((ExpressionNode)$1.n, (ExpressionNode)$3.n); }
+		   | indexer_expression LESSTHAN indexer_expression { $$.n = new LessThanNode((ExpressionNode)$1.n, (ExpressionNode)$3.n); }
+		   | indexer_expression LESSTHANOREQUAL indexer_expression { $$.n = new LessThanOrEqualNode((ExpressionNode)$1.n, (ExpressionNode)$3.n); }
+		   ;
+
 %%
