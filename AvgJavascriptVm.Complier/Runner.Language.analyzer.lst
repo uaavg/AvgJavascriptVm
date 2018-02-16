@@ -4,18 +4,13 @@
 // ==========================================================================
 //  Version:  1.2.2
 //  Machine:  TX-P-0038
-//  DateTime: 8/22/2017 4:50:28 PM
+//  DateTime: 2/16/2018 5:53:29 PM
 //  UserName: artem.glynskyi
 // ==========================================================================
 
 
 %namespace AvgJavascriptVm.Complier
-%using QUT.Gppg
 %scannertype RunnerScanner
-//^^^^^^^^^^
-// Error: Unexpected symbol, skipping to  <%%> 
-// Error: Parser error <Syntax error, unexpected scannertype, expecting ;, or .> 
-// ------------------------------------------------------------------------------
 %visibility internal
 %tokentype Token
 
@@ -23,8 +18,10 @@
 
 Eol             (\r\n?|\n)
 Space           [ \t]
-Number          [0-9]+(.[0-9]+)?
-Identifier      [a-z]+([a-z]|[0-9])*
+Number          [0-9]+(\.[0-9]+)?
+Identifier      [a-zA-Z]+([a-zA-Z]|[0-9])*
+
+%x STRING
 
 %{
 
@@ -41,28 +38,79 @@ Identifier      [a-z]+([a-z]|[0-9])*
 "do"            { return (int)Token.DO; }
 "for"           { return (int)Token.FOR; }
 "return"        { return (int)Token.RETURN; }
+"var"           { return (int)Token.VAR; }
+"true"          { return (int)Token.TRUE; }
+"false"         { return (int)Token.TRUE; }
+
+"&&"
+// Error: Expected space here
+// --------------------------
+"||"
+"!"
+// Error: Expected space here
+// --------------------------
+"==="           { return (int)Token.STRICTEQUAL; }
+"!=="           { return (int)Token.STRICTNOTEQUAL; }
+"=="            { return (int)Token.EQUAL; }
+"!="            { return (int)Token.NOTEQUAL; }
+"="             { return (int)Token.ASSIGN; }
+"+="            { return (int)Token.ADDASSG; }
+"-="            { return (int)Token.SUBASSG; }
+"*="            { return (int)Token.MULTASSG; }
+"/="            { return (int)Token.DIVASSG; }
+"%="            { return (int)Token.REMASSG; }
+"**="           { return (int)Token.EXPASSG; }
+"<<="           { return (int)Token.LEFTSHFTASSG; }
+">>="           { return (int)Token.RIGHTSHFTASSG; }
+">>>="          { return (int)Token.URIGHTSHFTASSG; }
+"&="            { return (int)Token.BITWISEANDASSG; }
+"^="            { return (int)Token.BITWISEXORASSG; }
+"|="            { return (int)Token.BITWISEORASSG; }
+"%"             { return (int)Token.REMAINDER; }
+"++"            { return (int)Token.INCREMENT; }
+"--"            { return (int)Token.DECREMENT; }
+"**"            { return (int)Token.EXPONENTIATION; } 
+"+"             { return (int)Token.ADDITION; } 
+"-"             { return (int)Token.SUBTRACTION; } 
+"*"             { return (int)Token.MULTIPLICATION; } 
+"/"             { return (int)Token.DIVISION; } 
+"&"             { return (int)Token.BITWISEAND; } 
+"|"             { return (int)Token.BITWISEOR; } 
+"^"             { return (int)Token.BITWISEXOR; } 
+"~"             { return (int)Token.BITWISENOT; } 
+"<<"            { return (int)Token.LEFTSHIFT; } 
+">>>"           { return (int)Token.ZEROFILLRIGHTSHIFT; } 
+">>"            { return (int)Token.SIGNPROPRIGHTSHIFT; } 
+">"             { return (int)Token.GREATERTHAN; }
+">="            { return (int)Token.GREATERTHANOREQUAL; }
+"<"             { return (int)Token.LESSTHAN; }
+"<="            { return (int)Token.LESSTHANOREQUAL; }
 ";"             { return (int)Token.SEMICOLON; }
 ","             { return (int)Token.COMMA; }
+"."             { return (int)Token.DOT; }
 "("             { return (int)Token.LPARENTH; }
 ")"             { return (int)Token.RPARENTH; }
 "{"             { return (int)Token.LCURLYBRACE; }
 "}"             { return (int)Token.RCURLYBRACE; }
+"["             { return (int)Token.LBRACKET; }
+"]"             { return (int)Token.RBRACKET; }
+":"             { return (int)Token.COLON; }
 {Number}		{ GetNumber(); return (int)Token.NUMBER; }
-//^^^^^
-// Error: Unknown lexical category <Number> 
-// -----------------------------------------
 {Identifier}    { GetIdentifier(); return (int)Token.IDENTIFIER; }
-//^^^^^^^^^
-// Error: Unknown lexical category <Identifier> 
-// ---------------------------------------------
 {Space}+		/* skip */
-//^^^^
-// Error: Unknown lexical category <Space> 
-// ----------------------------------------
+
+/* Begin string */
+(\"|\')                                            { BeginString(); }
+<STRING>(\"|\')                                    { if(AppendString()) return (int)Token.STRING; }
+<STRING>\\[b|t|n|v|f|f|r|\"|\'|\\]                 { AppendStringEscapedSymbol(); }
+<STRING>\\u([0-9a-fA-F]){4}                        { AppendStringUnicodeSymbol(); }
+<STRING>[\r|\n|\v]                                 { throw new ApplicationException("Inside string cannot contains end of line"); }
+<STRING>[^(\r\n?|\n)|\"|\'|\\]*                    { AppendString(); }       
+/* End string */
 
 
 %{
-  yylloc = new LexLocation(tokLin, tokCol, tokELin, tokECol);
+  yylloc = new QUT.Gppg.LexLocation(tokLin, tokCol, tokELin, tokECol);
 %}
 
 

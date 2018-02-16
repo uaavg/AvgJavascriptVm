@@ -20,12 +20,15 @@
 %token ASSIGN, ADDASSG, SUBASSG, MULTASSG, DIVASSG, REMASSG, EXPASSG, LEFTSHFTASG, RIGHTSHFTASSG, URIGHTSHIFTASSG, BITWISEANDASSG, BITWISEXORASSG, BITWISEORASSG
 %token REMAINDER, INCREMENT, DECREMENT, EXPONENTIATION, ADDITION, SUBTRACTION, MULTIPLICATION, DIVISION, UNARYPLUS, UNARYMINUS, POSTFIX, PREFIX, PROERTYGETTER
 %token BITWISEAND, BITWISEOR, BITWISEXOR, BITWISENOT, LEFTSHIFT, ZEROFILLRIGHTSHIFT, SIGNPROPRIGHTSHIFT
+%token LOGICALAND, LOGICALOR, LOGICALNOT
 %token NUMBER, IDENTIFIER, STRING
 %token THEN
 
 %nonassoc THEN 
 %nonassoc ELSE
 %right ASSIGN, ADDASSG, SUBASSG, MULTASSG, DIVASSG, REMASSG, EXPASSG, LEFTSHFTASSG, RIGHTSHFTASSG, URIGHTSHFTASSG, BITWISEANDASSG, BITWISEXORASSG, BITWISEORASSG
+%left LOGICALAND
+%left LOGICALOR
 %left BITWISEOR
 %left BITWISEXOR
 %left BITWISEAND
@@ -35,7 +38,7 @@
 %left ADDITION, SUBTRACTION
 %left MULTIPLICATION, DIVISION, REMAINDER
 %left EXPONENTIATION
-%right UNARYPLUS, UNARYMINUS, PREFIX, INCREMENT, DECREMENT, BITWISENOT
+%right UNARYPLUS, UNARYMINUS, PREFIX, INCREMENT, DECREMENT, BITWISENOT, LOGICALNOT
 %nonassoc POSTFIX
 %left DOT
 %left LPARENT, RPARENTH
@@ -84,14 +87,16 @@ binary_valid_expression : arithmetic { $$.n = $1.n; }
 						| comparison { $$.n = $1.n; }
 						| bitwise { $$.n = $1.n; }					
 						| unary { $$.n = $1.n; }
+						| logical { $$.n = $1.n; }
 						;
 
-invocation_expression : function_expression
-					  | function_named_expression					  
+invocation_expression : function_expression { $$.n = $1.n; }
+					  | function_named_expression { $$.n = $1.n; }					  
 					  ;
 
-unary_expression : invocation_expression                 
-                 | function_invocation_func
+unary_expression : indexer_expression { $$.n = $1.n; }
+                 | invocation_expression { $$.n = $1.n; }
+                 | function_invocation_func { $$.n = $1.n; }
 				 ;
 
 indexer_expression : lvalue
@@ -248,15 +253,18 @@ unary : BITWISENOT unary_expression { $$.n = new BitwiseNotNode((ExpressionNode)
       | lvalue INCREMENT %prec POSTFIX { $$.n = new PostfixIncrement((ExpressionNode)$1.n); }  
       | DECREMENT lvalue %prec PREFIX { $$.n = new PrefixDecrement((ExpressionNode)$2.n); } 
 	  | lvalue DECREMENT %prec POSTFIX { $$.n = new PostfixDecrement((ExpressionNode)$1.n); }		
+	  | LOGICALNOT unary_expression { $$.n = new LogicalNotNode((ExpressionNode)$2.n); }
       ;
 
-bitwise: binary_valid_expression BITWISEAND binary_valid_expression { $$.n = new BitwiseAndNode((ExpressionNode)$1.n, (ExpressionNode)$3.n); }
-       | binary_valid_expression BITWISEOR binary_valid_expression { $$.n = new BitwiseOrNode((ExpressionNode)$1.n, (ExpressionNode)$3.n); }
-	   | binary_valid_expression BITWISEXOR binary_valid_expression { $$.n = new BitwiseXorNode((ExpressionNode)$1.n, (ExpressionNode)$3.n); }	   
-	   | binary_valid_expression LEFTSHIFT binary_valid_expression { $$.n = new LeftShiftNode((ExpressionNode)$1.n, (ExpressionNode)$3.n); }
-	   | binary_valid_expression SIGNPROPRIGHTSHIFT binary_valid_expression { $$.n = new SignPropagatingRightShiftNode((ExpressionNode)$1.n, (ExpressionNode)$3.n); }
-	   | binary_valid_expression ZEROFILLRIGHTSHIFT binary_valid_expression { $$.n = new ZeroFillRightShiftNode((ExpressionNode)$1.n, (ExpressionNode)$3.n); }
-       ;
+bitwise : binary_valid_expression BITWISEAND binary_valid_expression { $$.n = new BitwiseAndNode((ExpressionNode)$1.n, (ExpressionNode)$3.n); }
+        | binary_valid_expression BITWISEOR binary_valid_expression { $$.n = new BitwiseOrNode((ExpressionNode)$1.n, (ExpressionNode)$3.n); }
+	    | binary_valid_expression BITWISEXOR binary_valid_expression { $$.n = new BitwiseXorNode((ExpressionNode)$1.n, (ExpressionNode)$3.n); }	   
+	    | binary_valid_expression LEFTSHIFT binary_valid_expression { $$.n = new LeftShiftNode((ExpressionNode)$1.n, (ExpressionNode)$3.n); }
+	    | binary_valid_expression SIGNPROPRIGHTSHIFT binary_valid_expression { $$.n = new SignPropagatingRightShiftNode((ExpressionNode)$1.n, (ExpressionNode)$3.n); }
+	    | binary_valid_expression ZEROFILLRIGHTSHIFT binary_valid_expression { $$.n = new ZeroFillRightShiftNode((ExpressionNode)$1.n, (ExpressionNode)$3.n); }
+        ;
 
-
+logical : binary_valid_expression LOGICALAND binary_valid_expression { $$.n = new LogicalAndNode((ExpressionNode)$1.n, (ExpressionNode)$3.n); }
+        | binary_valid_expression LOGICALOR binary_valid_expression{ $$.n = new LogicalOrNode((ExpressionNode)$1.n, (ExpressionNode)$3.n); }
+        ;
 %%

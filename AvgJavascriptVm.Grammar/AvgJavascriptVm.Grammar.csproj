@@ -109,7 +109,11 @@
     <Compile Include="Nodes\Operators\Comparison\NotEqualNode.cs" />
     <Compile Include="Nodes\Operators\Comparison\StrictEqualNode.cs" />
     <Compile Include="Nodes\Operators\Comparison\StrictNotEqualNode.cs" />
+    <Compile Include="Nodes\Operators\Conditional\ConditionalNode.cs" />
     <Compile Include="Nodes\Operators\Group\GroupNode.cs" />
+    <Compile Include="Nodes\Operators\Logical\LogicalAndNode.cs" />
+    <Compile Include="Nodes\Operators\Logical\LogicalNotNode.cs" />
+    <Compile Include="Nodes\Operators\Logical\LogicalOrNode.cs" />
     <Compile Include="Nodes\Operators\UnaryOperatorNode.cs" />
     <Compile Include="Nodes\PropertyGetterNode.cs" />
     <Compile Include="Nodes\StatementsAndDeclarations.cs" />

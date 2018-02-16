@@ -31,7 +31,9 @@ Identifier      [a-zA-Z]+([a-zA-Z]|[0-9])*
 "true"          { return (int)Token.TRUE; }
 "false"         { return (int)Token.TRUE; }
 
-
+"&&"            { return (int)Token.LOGICALAND; }
+"||"            { return (int)Token.LOGICALOR; }
+"!"             { return (int)Token.LOGICALNOT; }
 "==="           { return (int)Token.STRICTEQUAL; }
 "!=="           { return (int)Token.STRICTNOTEQUAL; }
 "=="            { return (int)Token.EQUAL; }
