@@ -30,6 +30,11 @@ Identifier      [a-zA-Z]+([a-zA-Z]|[0-9])*
 "var"           { return (int)Token.VAR; }
 "true"          { return (int)Token.TRUE; }
 "false"         { return (int)Token.TRUE; }
+"delete"        { return (int)Token.DELETE; }
+"typeof"        { return (int)Token.TYPEOF; }
+"void"          { return (int)Token.VOID; }
+"in"            { return (int)Token.IN; }
+"instanceof"    { return (int)Token.INSTANCEOF; }
 
 "&&"            { return (int)Token.LOGICALAND; }
 "||"            { return (int)Token.LOGICALOR; }
@@ -80,6 +85,7 @@ Identifier      [a-zA-Z]+([a-zA-Z]|[0-9])*
 "["             { return (int)Token.LBRACKET; }
 "]"             { return (int)Token.RBRACKET; }
 ":"             { return (int)Token.COLON; }
+"?"             { return (int)Token.QUESTION; }
 {Number}		{ GetNumber(); return (int)Token.NUMBER; }
 {Identifier}    { GetIdentifier(); return (int)Token.IDENTIFIER; }
 {Space}+		/* skip */

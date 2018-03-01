@@ -14,31 +14,36 @@
 	   }
 
 %start main
-
+ 
 %token FUNCTION, IF, ELSE, WHILE, DO, FOR, RETURN, VAR, TRUE, FALSE
 %token SEMICOLON, DOT, COMMA,  LPARENTH, RPARENTH, LCURLYBRACE, RCURLYBRACE, LBRACKET, RBRACKET, COLON
 %token ASSIGN, ADDASSG, SUBASSG, MULTASSG, DIVASSG, REMASSG, EXPASSG, LEFTSHFTASG, RIGHTSHFTASSG, URIGHTSHIFTASSG, BITWISEANDASSG, BITWISEXORASSG, BITWISEORASSG
 %token REMAINDER, INCREMENT, DECREMENT, EXPONENTIATION, ADDITION, SUBTRACTION, MULTIPLICATION, DIVISION, UNARYPLUS, UNARYMINUS, POSTFIX, PREFIX, PROERTYGETTER
 %token BITWISEAND, BITWISEOR, BITWISEXOR, BITWISENOT, LEFTSHIFT, ZEROFILLRIGHTSHIFT, SIGNPROPRIGHTSHIFT
 %token LOGICALAND, LOGICALOR, LOGICALNOT
+%token QUESTION
 %token NUMBER, IDENTIFIER, STRING
-%token THEN
-
+%token DELETE, TYPEOF, VOID, IN, INSTANCEOF
+%token THEN, LOWESTPRIORITY
+ 
+%nonassoc LOWESTPRIORITY
 %nonassoc THEN 
 %nonassoc ELSE
+%left COMMA
 %right ASSIGN, ADDASSG, SUBASSG, MULTASSG, DIVASSG, REMASSG, EXPASSG, LEFTSHFTASSG, RIGHTSHFTASSG, URIGHTSHFTASSG, BITWISEANDASSG, BITWISEXORASSG, BITWISEORASSG
+%right QUESTION
 %left LOGICALAND
 %left LOGICALOR
 %left BITWISEOR
 %left BITWISEXOR
 %left BITWISEAND
 %left STRICTEQUAL, STRICTNOTEQUAL, EQUAL, NOTEQUAL
-%left GREATERTHAN, GREATERTHANOREQUAL, LESSTHAN, LESSTHANOREQUAL
+%left GREATERTHAN, GREATERTHANOREQUAL, LESSTHAN, LESSTHANOREQUAL, IN, INSTANCEOF
 %left LEFTSHIFT, ZEROFILLRIGHTSHIFT, SIGNPROPRIGHTSHIFT
 %left ADDITION, SUBTRACTION
 %left MULTIPLICATION, DIVISION, REMAINDER
 %left EXPONENTIATION
-%right UNARYPLUS, UNARYMINUS, PREFIX, INCREMENT, DECREMENT, BITWISENOT, LOGICALNOT
+%right UNARYPLUS, UNARYMINUS, PREFIX, INCREMENT, DECREMENT, BITWISENOT, LOGICALNOT, DELETE, VOID, TYPEOF
 %nonassoc POSTFIX
 %left DOT
 %left LPARENT, RPARENTH
@@ -73,13 +78,15 @@ statement : block { $$.n = $1.n; }
 		  | statement_expression SEMICOLON { $$.n = $1.n;}
 	      ;
 
-expression : statement_expression { $$.n = $1.n; }
+expression : statement_expression %prec LOWESTPRIORITY { $$.n = $1.n; }
            | function_expression { $$.n = $1.n; }
-		   | function_named_expression { $$.n = $1.n; }
+		   | function_named_expression { $$.n = $1.n; }		   		   
            ;
 
 statement_expression : assignment { $$.n = $1.n; }							 
-                     | binary_valid_expression { $$.n = $1.n; }
+                     | conditional { $$.n = $1.n; }
+					 | comma { $$.n = $1.n; }
+					 | binary_valid_expression  %prec LOWESTPRIORITY { $$.n = $1.n; }
 					 ;
 
 binary_valid_expression : arithmetic { $$.n = $1.n; }
@@ -87,7 +94,12 @@ binary_valid_expression : arithmetic { $$.n = $1.n; }
 						| comparison { $$.n = $1.n; }
 						| bitwise { $$.n = $1.n; }					
 						| unary { $$.n = $1.n; }
-						| logical { $$.n = $1.n; }
+						| logical { $$.n = $1.n; }		
+						| delete { $$.n = $1.n; }
+						| typeof { $$.n = $1.n; }
+						| void { $$.n = $1.n; }
+						| in { $$.n = $1.n; }
+						| instanceof {$$.n = $1.n; }
 						;
 
 invocation_expression : function_expression { $$.n = $1.n; }
@@ -267,4 +279,26 @@ bitwise : binary_valid_expression BITWISEAND binary_valid_expression { $$.n = ne
 logical : binary_valid_expression LOGICALAND binary_valid_expression { $$.n = new LogicalAndNode((ExpressionNode)$1.n, (ExpressionNode)$3.n); }
         | binary_valid_expression LOGICALOR binary_valid_expression{ $$.n = new LogicalOrNode((ExpressionNode)$1.n, (ExpressionNode)$3.n); }
         ;
+
+conditional : statement_expression QUESTION statement_expression COLON statement_expression %prec QUESTION { $$.n = new ConditionalNode((ExpressionNode)$1.n, (ExpressionNode)$3.n, (ExpressionNode)$5.n); }
+            ;
+
+comma : binary_valid_expression COMMA binary_valid_expression { $$.n = new CommaNode((ExpressionNode)$1.n, (ExpressionNode)$3.n); }    
+      ;
+
+delete : DELETE lvalue { $$.n = new DeleteNode((ExpressionNode)$2.n); }
+       ;
+
+typeof: TYPEOF expression { $$.n = new TypeofNode((ExpressionNode)$2.n); }
+      ;
+
+void: VOID expression { $$.n = new VoidNode((ExpressionNode)$2.n); }
+      ;
+
+in: binary_valid_expression IN binary_valid_expression { $$.n = new InNode((ExpressionNode)$1.n, (ExpressionNode)$3.n); }
+  ;
+
+instanceof: binary_valid_expression INSTANCEOF binary_valid_expression { $$.n = new InNode((ExpressionNode)$1.n, (ExpressionNode)$3.n); }
+          ;
+
 %%

@@ -107,7 +107,7 @@
       <Output TaskParameter="Outputs" ItemName="RunnerScanner" />
     </Exec>
     <Message Text="Generating parser for $(RunnerParser) ..." />
-    <Exec Command="$(GppgTool) /no-lines /gplex &quot;$(RunnerParser).Language.grammar.y&quot; &gt; &quot;$(RunnerParser).Parser.Generated.cs&quot;" WorkingDirectory="$(ProjectDir)" Outputs="$(RunnerParser).Parser.Generated.cs">
+    <Exec Command="$(GppgTool) /no-lines /gplex /report /conflicts &quot;$(RunnerParser).Language.grammar.y&quot; &gt; &quot;$(RunnerParser).Parser.Generated.cs&quot;" WorkingDirectory="$(ProjectDir)" Outputs="$(RunnerParser).Parser.Generated.cs">
       <Output TaskParameter="Outputs" ItemName="Runner" />
     </Exec>
   </Target>

@@ -4,22 +4,22 @@ namespace AvgJavascriptVm.Grammar.Nodes
 {
     public class ConditionalNode: ExpressionNode
     {
-        public ExpressionNode Conditional { get; }
+        public ExpressionNode Condition { get; }
 
         public ExpressionNode TrueValue { get; }
 
         public ExpressionNode FalseValue { get; }
 
-        public ConditionalNode(ExpressionNode conditional, ExpressionNode trueValue, ExpressionNode falseValue) 
+        public ConditionalNode(ExpressionNode condition, ExpressionNode trueValue, ExpressionNode falseValue) 
         {
-            Conditional = conditional;
+            Condition = condition;
             TrueValue = trueValue;
             FalseValue = falseValue;
         }
 
         public override void ToString(NodeStringBuilder strBuilder)
         {
-            Conditional.ToString(strBuilder);
+            Condition.ToString(strBuilder);
             strBuilder.Append(" ? ");
             TrueValue.ToString(strBuilder);
             strBuilder.Append(" : ");

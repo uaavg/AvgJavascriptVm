@@ -101,6 +101,7 @@
     <Compile Include="Nodes\Operators\Bitwise\LeftShiftNode.cs" />
     <Compile Include="Nodes\Operators\Bitwise\SignPropagatingRightShiftNode.cs" />
     <Compile Include="Nodes\Operators\Bitwise\ZeroFillRightShiftNode.cs" />
+    <Compile Include="Nodes\Operators\Other\CommaNode.cs" />
     <Compile Include="Nodes\Operators\Comparison\EqualNode.cs" />
     <Compile Include="Nodes\Operators\Comparison\GreaterThanNode.cs" />
     <Compile Include="Nodes\Operators\Comparison\GreaterThanOrEqualNode.cs" />
@@ -109,11 +110,16 @@
     <Compile Include="Nodes\Operators\Comparison\NotEqualNode.cs" />
     <Compile Include="Nodes\Operators\Comparison\StrictEqualNode.cs" />
     <Compile Include="Nodes\Operators\Comparison\StrictNotEqualNode.cs" />
-    <Compile Include="Nodes\Operators\Conditional\ConditionalNode.cs" />
+    <Compile Include="Nodes\Operators\Other\ConditionalNode.cs" />
     <Compile Include="Nodes\Operators\Group\GroupNode.cs" />
     <Compile Include="Nodes\Operators\Logical\LogicalAndNode.cs" />
     <Compile Include="Nodes\Operators\Logical\LogicalNotNode.cs" />
     <Compile Include="Nodes\Operators\Logical\LogicalOrNode.cs" />
+    <Compile Include="Nodes\Operators\Other\DeleteNode.cs" />
+    <Compile Include="Nodes\Operators\Other\InNode.cs" />
+    <Compile Include="Nodes\Operators\Other\InstanceOf.cs" />
+    <Compile Include="Nodes\Operators\Other\TypeofNode.cs" />
+    <Compile Include="Nodes\Operators\Other\VoidNode.cs" />
     <Compile Include="Nodes\Operators\UnaryOperatorNode.cs" />
     <Compile Include="Nodes\PropertyGetterNode.cs" />
     <Compile Include="Nodes\StatementsAndDeclarations.cs" />
@@ -132,6 +138,9 @@
       <Name>AvgJavascriptVm.Core</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Nodes\Operators\Comma\" />
+    <Folder Include="Nodes\Operators\Conditional\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
